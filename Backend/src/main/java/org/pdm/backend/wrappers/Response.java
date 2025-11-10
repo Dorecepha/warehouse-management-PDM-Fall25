@@ -3,6 +3,7 @@ package org.pdm.backend.wrappers;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Builder;
 import lombok.Data;
+import org.pdm.backend.enums.UserRole;
 import org.pdm.backend.model.*;
 
 import java.time.LocalDateTime;
@@ -17,7 +18,7 @@ public class Response {
     private String message;
 
     private String token;
-    private String role;
+    private UserRole role;
     private String expirationTime;
 
     private Integer totalPages;

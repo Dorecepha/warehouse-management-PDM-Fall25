@@ -3,11 +3,20 @@ package org.pdm.backend.model;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.NotBlank;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.pdm.backend.enums.UserRole;
+
 
 import java.time.LocalDateTime;
 import java.util.List;
 
+@AllArgsConstructor
+@NoArgsConstructor
+@Data
+@Builder
 public class User {
     private Long id;
 
@@ -30,7 +39,7 @@ public class User {
     private List<String> transactionIDs;
 
 
-    private final LocalDateTime createdAt = LocalDateTime.now();
+    private LocalDateTime createdAt;
 
     @Override
     public String toString() {
@@ -44,4 +53,9 @@ public class User {
                 ", createdAt=" + createdAt +
                 '}';
     }
+//
+//    public void setCreatedAt(LocalDateTime createdAt){
+//        this.createdAt= createdAt;
+//
+//    }
 }
