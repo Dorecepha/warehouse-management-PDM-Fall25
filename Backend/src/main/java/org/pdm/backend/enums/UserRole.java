@@ -1,5 +1,5 @@
 package org.pdm.backend.enums;
 
 public enum UserRole {
-    MANAGER, STAFF
+    ADMIN,MANAGER
 }
