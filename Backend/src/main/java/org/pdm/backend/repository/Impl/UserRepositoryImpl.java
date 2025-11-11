@@ -88,7 +88,7 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public User save(User userToSave) {
-        String sql = "INSERT INTO users (name, email, password, phone_number, role) VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO users (name, email, password, phone_number, role,created_at) VALUES (?, ?, ?, ?, ?,?)";
         try (Connection conn = DatabaseConfig.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             ps.setString(1, userToSave.getName());
@@ -96,6 +96,7 @@ public class UserRepositoryImpl implements UserRepository {
             ps.setString(3, userToSave.getPassword());
             ps.setString(4, userToSave.getPhoneNumber());
             ps.setString(5, userToSave.getRole().toString());
+            ps.setTimestamp(6, Timestamp.valueOf(userToSave.getCreatedAt()));
             int affectedRows= ps.executeUpdate();
             if(affectedRows == 0) throw new SQLException("Creating user failed, no rows affected.");
             ResultSet generatedKeys = ps.getGeneratedKeys();

@@ -31,7 +31,7 @@ public class UserServiceImpl implements UserService {
 
         UserRole role = registerRequest.getRole() != null
                 ? registerRequest.getRole()
-                : UserRole.MANAGER;
+                : UserRole.STAFF;
 
         User userToSave = new User();
         userToSave.setName(registerRequest.getName());
