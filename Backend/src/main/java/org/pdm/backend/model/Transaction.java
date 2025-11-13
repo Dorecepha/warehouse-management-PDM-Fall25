@@ -32,15 +32,16 @@ public class Transaction {
     private String description;
     private String note;
 
-    private final LocalDateTime createdAt = LocalDateTime.now();
+    private LocalDateTime createdAt = LocalDateTime.now();
+
     private LocalDateTime updateAt;
 
 
-    private Long productID;
+    private Long productId;
 
-    private Long userID;
+    private Long userId;
 
-    private Long supplierID;
+    private Long supplierId;
 
     @Override
     public String toString() {
