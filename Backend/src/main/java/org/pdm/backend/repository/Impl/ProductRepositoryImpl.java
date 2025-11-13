@@ -138,7 +138,8 @@ public class ProductRepositoryImpl implements ProductRepository {
         product.setExpiryDate(rs.getTimestamp("expiry_date").toLocalDateTime());
         product.setImageUrl(rs.getString("image_url"));
         product.setCategoryID(rs.getLong("category_id"));
-        product.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
+        if (rs.getTimestamp("created_at") != null){
+        product.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());}
         return product;
     }
 }
