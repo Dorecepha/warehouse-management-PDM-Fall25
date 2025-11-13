@@ -3,6 +3,8 @@ package org.pdm.backend.repository.Impl;
 import java.util.List;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Optional;
+
 import org.pdm.backend.security.DatabaseConfig;
 
 
@@ -76,19 +78,19 @@ public class ProductRepositoryImpl implements ProductRepository {
     }
 
     @Override
-    public Product findById(Long id) {
+    public Optional<Product> findById(Long id) {
         String sql = "SELECT * FROM products WHERE id = ?";
         try(Connection conn= DatabaseConfig.getConnection();){
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setLong(1, id);
             ResultSet rs = ps.executeQuery();
             if(rs.next()){
-                return mapRowToProduct(rs);
+                return Optional.of(mapRowToProduct(rs));
             }
         }catch (Exception e){
             e.printStackTrace();
         }
-        return null;
+        return Optional.empty();
     }
 
     @Override
