@@ -39,7 +39,7 @@ public class Product {
 
     private String imageUrl;
 
-    private final LocalDateTime createdAt = LocalDateTime.now();
+    private LocalDateTime createdAt = LocalDateTime.now();
 
 
     private Long categoryID;
