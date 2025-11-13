@@ -13,9 +13,11 @@ function RecordsListPage() {
     search,
   });
 
-  const items = data?.items ?? data?.records ?? [];
+  const items = useMemo(() => data?.items ?? data?.records ?? [], [data]);
+
   const total = data?.meta?.total ?? items.length;
-  const totalPages = data?.meta?.totalPages ?? Math.max(1, Math.ceil(total / limit));
+  const totalPages =
+    data?.meta?.totalPages ?? Math.max(1, Math.ceil(total / limit));
 
   const columns = useMemo(
     () => [
@@ -55,9 +57,14 @@ function RecordsListPage() {
       <header className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="text-2xl font-semibold text-slate-900">Records</h1>
-          <p className="text-sm text-slate-500">Manage your warehouse records and track key details.</p>
+          <p className="text-sm text-slate-500">
+            Manage your warehouse records and track key details.
+          </p>
         </div>
-        <form onSubmit={handleSearchSubmit} className="flex w-full max-w-md gap-2">
+        <form
+          onSubmit={handleSearchSubmit}
+          className="flex w-full max-w-md gap-2"
+        >
           <input
             value={searchInput}
             onChange={(event) => setSearchInput(event.target.value)}
@@ -109,7 +116,10 @@ function RecordsListPage() {
               {rows.map((row) => (
                 <tr key={row.id} className="hover:bg-slate-50">
                   {columns.map((column) => (
-                    <td key={column.key} className="px-4 py-3 text-sm text-slate-700">
+                    <td
+                      key={column.key}
+                      className="px-4 py-3 text-sm text-slate-700"
+                    >
                       {row[column.key] ?? '—'}
                     </td>
                   ))}
@@ -122,7 +132,8 @@ function RecordsListPage() {
 
       <footer className="flex flex-col items-center justify-between gap-3 sm:flex-row">
         <p className="text-sm text-slate-500">
-          Page {page} of {totalPages} {isFetching && !isLoading ? '· Updating…' : ''}
+          Page {page} of {totalPages}{' '}
+          {isFetching && !isLoading ? '· Updating…' : ''}
         </p>
         <div className="flex items-center gap-2">
           <button

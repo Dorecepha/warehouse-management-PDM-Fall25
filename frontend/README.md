@@ -1,52 +1,70 @@
 # 📦 Warehouse Management System — Frontend Team Guide
 
-Welcome to the Warehouse Management System frontend project!  
-This guide is written for **beginners**, with simple explanations and clear logic so that anyone can understand what we are building, why we’re building it, and how to contribute successfully.
-
-This README replaces all previous documentation and serves as the **official onboarding guide for the entire team**.
+Hi 1000 anh em nha, đây sẽ là guide chính thức cho team Frontend. Cả nhà làm theo hướng dẫn ở dưới để hiểu rõ về project của mình nha!
 
 ---
 
-# 🚀 1. Project Overview
+# 1. Sơ lược
 
-The Warehouse Management System consists of two major parts:
+Warehouse Management System (WMS) sẽ bao gồm hai phần chính ở dưới:
 
-- **Backend (Spring Boot)** — the brain that talks to the database  
-- **Frontend (React + Tailwind)** — the face that users interact with
+- **Backend (Spring Boot)** - đây là "đầu não" để giao tiếp với Database.
+- **Frontend (React + Tailwind)** - đây là nơi người dùng sẽ thao tác, giống như "gương mặt" của WMS này.
 
-Our frontend team is responsible for building all the **pages, buttons, tables, forms, navigation**, and connecting them cleanly to the backend.
+Team Frontend của mình sẽ thêm các chức năng sau: **pages, buttons, tables, forms, navigation**, và đảm bảo các chức năng này có thể liên lạc với Backend.
 
-This system will allow users to:
+Mục tiêu chính của team mình:
 
-- Log in  
-- View all warehouse records  
-- Add new records  
-- Edit existing records  
-- Delete records  
-- View summary reports  
-
-Everything you build will support one of these goals.
+- Đăng nhập
+- Xem báo cáo của kho
+- Thêm, xóa, sửa dữ liệu trong kho
 
 ---
 
-# 🧰 2. Before You Start — Requirements
+# 2. QUAN TRỌNG: Để chạy được cái Project này, hãy làm theo các bước sau!
 
-You must have:
+Tải về:
 
-- **Node.js LTS** installed  
-- **Git** installed  
-- **VS Code** (recommended)
+- **Node.js LTS**
+- **Git**
+- **VS Code**
 
-If you do not have these, ask the QA Lead to help.
+Nếu không rõ phần này, hãy nhờ Tín nhé!
 
 ---
 
-# ⚙️ 3. Setup — Do This First
+# 3. Cài đặt chung
 
-Once you have cloned the project, run the following commands inside the **frontend** folder.
+## 3.1. Clone repository
 
-## 1️⃣ Clone the repository
+Chạy câu lệnh sau trong git bash tích hợp trong VSCode:
 
 ```bash
-git clone <YOUR-REPO-LINK>
+git clone https://github.com/Dorecepha/warehouse-management-PDM-Fall25
 cd warehouse-management-PDM-Fall25/frontend
+```
+
+## 3.2. Chạy script ghi sẵn
+
+Nếu Windows (nhớ chỉnh sang powershell):
+
+```powershell
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+.\setup.ps1
+```
+
+Nếu Mac/Linux:
+
+```bash
+bash setup.sh
+```
+
+## 3.3. Khởi chạy
+
+Chạy câu lệnh sau trong git bash:
+
+```bash
+npm start
+```
+
+Nếu thành công, bạn sẽ thấy một dòng chữ lớn: Warehouse Management System.

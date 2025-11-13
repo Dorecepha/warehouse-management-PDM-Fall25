@@ -25,7 +25,9 @@ function RecordCreatePage() {
     <div className="space-y-6">
       <header className="space-y-1">
         <h1 className="text-2xl font-semibold text-slate-900">Create Record</h1>
-        <p className="text-sm text-slate-500">Fill out the form below to add a new warehouse record.</p>
+        <p className="text-sm text-slate-500">
+          Fill out the form below to add a new warehouse record.
+        </p>
       </header>
 
       <RecordForm

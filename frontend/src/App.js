@@ -33,7 +33,15 @@ function App() {
         <Route path="/records" element={<RecordsListPage />} />
         <Route path="/records/new" element={<RecordCreatePage />} />
         <Route path="/records/:id/edit" element={<RecordEditPage />} />
-        <Route path="/reports" element={<Placeholder title="Reports" description="Analyze performance and trends." />} />
+        <Route
+          path="/reports"
+          element={
+            <Placeholder
+              title="Reports"
+              description="Analyze performance and trends."
+            />
+          }
+        />
       </Route>
       <Route path="*" element={<Navigate to="/records" replace />} />
     </Routes>
