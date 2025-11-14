@@ -33,7 +33,10 @@ function RecordForm({
       noValidate
     >
       <div className="space-y-2">
-        <label htmlFor="name" className="block text-sm font-medium text-slate-700">
+        <label
+          htmlFor="name"
+          className="block text-sm font-medium text-slate-700"
+        >
           Name
         </label>
         <input
@@ -52,7 +55,10 @@ function RecordForm({
       </div>
 
       <div className="space-y-2">
-        <label htmlFor="quantity" className="block text-sm font-medium text-slate-700">
+        <label
+          htmlFor="quantity"
+          className="block text-sm font-medium text-slate-700"
+        >
           Quantity
         </label>
         <input

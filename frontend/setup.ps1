@@ -28,6 +28,7 @@ $appDependencies = @(
     'axios',
     '@tanstack/react-query',
     'react-hook-form',
+    '@hookform/resolvers',
     'zod'
 )
 if ($appDependencies.Count -gt 0) {
@@ -37,6 +38,7 @@ if ($appDependencies.Count -gt 0) {
 Write-Section 'Installing development dependencies'
 $devDependencies = @(
     'prettier',
+    'eslint',
     'eslint-config-prettier',
     'eslint-plugin-prettier'
 )
