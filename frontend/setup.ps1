@@ -29,7 +29,8 @@ $appDependencies = @(
     '@tanstack/react-query',
     'react-hook-form',
     '@hookform/resolvers',
-    'zod'
+    'zod',
+    'recharts'
 )
 if ($appDependencies.Count -gt 0) {
     npm install $appDependencies
