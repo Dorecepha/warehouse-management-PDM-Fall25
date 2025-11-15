@@ -1,11 +1,11 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { recordSchema, recordFormDefaultValues } from './schema';
+import { categorySchema, categoryFormDefaultValues } from './schema';
 
-function RecordForm({
-  defaultValues = recordFormDefaultValues,
-  submitLabel = 'Save record',
+function CategoryForm({
+  defaultValues = categoryFormDefaultValues,
+  submitLabel = 'Save Category',
   onSubmit = () => {},
   isSubmitting: isSubmittingProp = false,
   serverError,
@@ -16,7 +16,7 @@ function RecordForm({
     reset,
     formState: { errors, isSubmitting },
   } = useForm({
-    resolver: zodResolver(recordSchema),
+    resolver: zodResolver(categorySchema),
     defaultValues,
   });
 
@@ -37,43 +37,18 @@ function RecordForm({
           htmlFor="name"
           className="block text-sm font-medium text-slate-700"
         >
-          Name
+          Category Name
         </label>
         <input
           id="name"
           type="text"
           className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm shadow-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
-          placeholder="Enter record name"
           {...register('name')}
           aria-invalid={errors.name ? 'true' : 'false'}
         />
         {errors.name ? (
           <p className="text-sm text-red-600" role="alert">
             {errors.name.message}
-          </p>
-        ) : null}
-      </div>
-
-      <div className="space-y-2">
-        <label
-          htmlFor="quantity"
-          className="block text-sm font-medium text-slate-700"
-        >
-          Quantity
-        </label>
-        <input
-          id="quantity"
-          type="number"
-          inputMode="numeric"
-          min="0"
-          step="1"
-          className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm shadow-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
-          {...register('quantity', { valueAsNumber: true })}
-          aria-invalid={errors.quantity ? 'true' : 'false'}
-        />
-        {errors.quantity ? (
-          <p className="text-sm text-red-600" role="alert">
-            {errors.quantity.message}
           </p>
         ) : null}
       </div>
@@ -97,4 +72,4 @@ function RecordForm({
   );
 }
 
-export default RecordForm;
+export default CategoryForm;

@@ -1,13 +1,13 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import api from '../../lib/axios';
 
-const RECORDS_QUERY_KEY = ['records'];
+const CATEGORIES_QUERY_KEY = ['categories'];
 
-export function useRecords({ page = 1, limit = 10, search = '' } = {}) {
+export function useCategories({ page = 1, limit = 10, search = '' } = {}) {
   return useQuery({
-    queryKey: [...RECORDS_QUERY_KEY, { page, limit, search }],
+    queryKey: [...CATEGORIES_QUERY_KEY, { page, limit, search }],
     queryFn: async () => {
-      const response = await api.get('/records', {
+      const response = await api.get('/categories', {
         params: {
           page,
           limit,
@@ -20,55 +20,55 @@ export function useRecords({ page = 1, limit = 10, search = '' } = {}) {
   });
 }
 
-export function useRecord(id) {
+export function useCategory(id) {
   return useQuery({
-    queryKey: [...RECORDS_QUERY_KEY, id],
+    queryKey: [...CATEGORIES_QUERY_KEY, id],
     queryFn: async () => {
-      const response = await api.get(`/records/${id}`);
+      const response = await api.get(`/categories/${id}`);
       return response.data;
     },
     enabled: Boolean(id),
   });
 }
 
-export function useCreateRecord() {
+export function useCreateCategory() {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async (payload) => {
-      const response = await api.post('/records', payload);
+      const response = await api.post('/categories', payload);
       return response.data;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: RECORDS_QUERY_KEY });
+      queryClient.invalidateQueries({ queryKey: CATEGORIES_QUERY_KEY });
     },
   });
 }
 
-export function useUpdateRecord() {
+export function useUpdateCategory() {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async ({ id, data }) => {
-      const response = await api.put(`/records/${id}`, data);
+      const response = await api.put(`/categories/${id}`, data);
       return response.data;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: RECORDS_QUERY_KEY });
+      queryClient.invalidateQueries({ queryKey: CATEGORIES_QUERY_KEY });
     },
   });
 }
 
-export function useDeleteRecord() {
+export function useDeleteCategory() {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async (id) => {
-      const response = await api.delete(`/records/${id}`);
+      const response = await api.delete(`/categories/${id}`);
       return response.data;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: RECORDS_QUERY_KEY });
+      queryClient.invalidateQueries({ queryKey: CATEGORIES_QUERY_KEY });
     },
   });
 }

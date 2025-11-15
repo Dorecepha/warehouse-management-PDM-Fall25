@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { z } from 'zod';
 import api from '../lib/axios';
 
@@ -18,8 +18,8 @@ const defaultValues = {
 function LoginPage() {
   const navigate = useNavigate();
   const location = useLocation();
-  const from = location.state?.from?.pathname ?? '/records';
-  const [serverError, setServerError] = React.useState('');
+  const from = location.state?.from?.pathname ?? '/dashboard';
+  const [serverError, setServerError] = useState('');
 
   const {
     register,
@@ -34,14 +34,17 @@ function LoginPage() {
     setServerError('');
     try {
       const response = await api.post('/auth/login', values);
-      const token = response.data?.token ?? response.data?.accessToken ?? '';
 
-      if (!token) {
-        setServerError('Login succeeded but no token was returned.');
+      const token = response.data?.token;
+      const role = response.data?.role;
+
+      if (!token || !role) {
+        setServerError('Login succeeded but no token or role was returned.');
         return;
       }
 
       localStorage.setItem('token', token);
+      localStorage.setItem('userRole', role);
       navigate(from, { replace: true });
     } catch (error) {
       setServerError(error.message || 'Unable to sign in.');
@@ -123,6 +126,16 @@ function LoginPage() {
             {isSubmitting ? 'Signing in…' : 'Sign in'}
           </button>
         </form>
+
+        <p className="text-center text-sm text-slate-600">
+          Don't have an account?{' '}
+          <Link
+            to="/register"
+            className="font-medium text-primary hover:text-primary/80"
+          >
+            Sign up
+          </Link>
+        </p>
       </div>
     </div>
   );
