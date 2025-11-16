@@ -58,7 +58,7 @@ public class ProductController {
         product.setName(name);
         product.setSku(sku);
         product.setPrice(price);
-        product.setProductId(productId);
+        product.setId(productId); // Changed from setProductId to setId
         product.setStockQuantity(stockQuantity);
         product.setCategoryId(categoryId);
         product.setDescription(description);

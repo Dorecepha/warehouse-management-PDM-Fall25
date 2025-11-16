@@ -35,14 +35,14 @@ public class Product {
 
     private String description;
 
-    private LocalDateTime expiryDate;
+    private LocalDateTime expiryDate= LocalDateTime.now().plusMonths(12);
 
     private String imageUrl;
 
     @Builder.Default
     private LocalDateTime createdAt = LocalDateTime.now();
     
-    private Long categoryID;
+    private Long categoryId;
 
 
     @Override

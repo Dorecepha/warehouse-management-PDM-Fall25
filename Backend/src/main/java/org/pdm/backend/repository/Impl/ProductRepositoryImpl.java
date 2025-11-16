@@ -10,7 +10,9 @@ import org.pdm.backend.security.DatabaseConfig;
 
 import org.pdm.backend.model.Product;
 import org.pdm.backend.repository.ProductRepository;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public class ProductRepositoryImpl implements ProductRepository {
 
     @Override
@@ -25,7 +27,7 @@ public class ProductRepositoryImpl implements ProductRepository {
             ps.setString(5, productToSave.getDescription());
             ps.setTimestamp(6, Timestamp.valueOf(productToSave.getExpiryDate()));
             ps.setString(7, productToSave.getImageUrl());
-            ps.setLong(8, productToSave.getCategoryID());
+            ps.setLong(8, productToSave.getCategoryId());
             ps.setTimestamp(9, Timestamp.valueOf(productToSave.getCreatedAt()));
             ps.executeUpdate();
             ResultSet rs = ps.getGeneratedKeys();
@@ -51,7 +53,7 @@ public class ProductRepositoryImpl implements ProductRepository {
             ps.setString(5, productToUpdate.getDescription());
             ps.setTimestamp(6, Timestamp.valueOf(productToUpdate.getExpiryDate()));
             ps.setString(7, productToUpdate.getImageUrl());
-            ps.setLong(8, productToUpdate.getCategoryID());
+            ps.setLong(8, productToUpdate.getCategoryId());
             ps.setLong(9, productToUpdate.getId());
             ps.executeUpdate();
             return productToUpdate;
@@ -136,9 +138,10 @@ public class ProductRepositoryImpl implements ProductRepository {
         product.setPrice(rs.getBigDecimal("price"));
         product.setStockQuantity(rs.getInt("stock_quantity"));
         product.setDescription(rs.getString("description"));
-        product.setExpiryDate(rs.getTimestamp("expiry_date").toLocalDateTime());
+        if (rs.getTimestamp("expiry_date") != null){        product.setExpiryDate(rs.getTimestamp("expiry_date").toLocalDateTime());
+        }
         product.setImageUrl(rs.getString("image_url"));
-        product.setCategoryID(rs.getLong("category_id"));
+        product.setCategoryId(rs.getLong("category_id"));
         if (rs.getTimestamp("created_at") != null){
         product.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());}
         return product;
