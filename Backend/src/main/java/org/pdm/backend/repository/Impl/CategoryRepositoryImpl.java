@@ -2,6 +2,7 @@ package org.pdm.backend.repository.Impl;
 
 import org.pdm.backend.model.Category;
 import org.pdm.backend.repository.CategoryRepository;
+import org.pdm.backend.security.DatabaseConfig;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -16,7 +17,7 @@ import java.util.Optional;
 @Repository
 public class CategoryRepositoryImpl implements CategoryRepository {
 
-    private final JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate = new JdbcTemplate(DatabaseConfig.getDataSource());
 
     private final RowMapper<Category> mapRowToCategories = (rs, rowNum) -> {
         Category category = new Category();
@@ -24,10 +25,6 @@ public class CategoryRepositoryImpl implements CategoryRepository {
         category.setName(rs.getString("name"));
         return category;
     };
-
-    public CategoryRepositoryImpl(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-    }
 
     @Override
     public Category save(Category category) {
