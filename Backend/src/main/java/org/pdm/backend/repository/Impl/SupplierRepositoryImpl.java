@@ -43,7 +43,6 @@ public class SupplierRepositoryImpl implements SupplierRepository {
                 list.add(mapRowToSupplier(rs));
             }
             }
-        }
         catch (SQLException e) {
             e.printStackTrace();
         }
@@ -58,7 +57,7 @@ public class SupplierRepositoryImpl implements SupplierRepository {
             ps.setString(1,supplierToSave.getName());
             ps.setString(2,supplierToSave.getContactInfo());
             ps.setString(3,supplierToSave.getAddress());
-            int affectedRows = ps. executeUpdate();
+            int affectedRows = ps.executeUpdate();
             if (affectedRows ==0){
                 throw new SQLException("FAILED, THE ROWS REMAIN!");
             }
@@ -84,7 +83,6 @@ public class SupplierRepositoryImpl implements SupplierRepository {
                     ps.setString(2, supplierToUpdate.getContactInfo());
                     ps.setString(3, supplierToUpdate.getAddress());
                     ps.setLong(4, supplierToUpdate.getId());
-
                     ps.executeUpdate();
                     return supplierToUpdate;
             }
@@ -106,12 +104,12 @@ public class SupplierRepositoryImpl implements SupplierRepository {
             }
             return 0L;
         }
-        /// tui đang đọc giải thích của gemeni mà tui ch hiểu khúc này@@
+
         private Supplier mapRowToSupplier(ResultSet rs) throws SQLException{
             return Supplier.builder()
                             .id(rs.getLong("id"))
                             .name(rs.getString("name"))
-                            .contactInfo(rs.getString("contact_ìnfo"))
+                            .contactInfo(rs.getString("contact_info"))
                             .address(rs.getString("address"))
                             .build();
         }

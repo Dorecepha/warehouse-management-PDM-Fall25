@@ -42,6 +42,7 @@ public class SupplierServiceImpl implements SupplierService {
         if (savedSupplier.getName() == null || savedSupplier.getName().isBlank()){
             throw new NameValueRequiredException("Supplier name is required");
         }
+        supplierRepository.save(savedSupplier);
         return Response.builder()
                 .status(200)
                 .message("SUCCESSED!")

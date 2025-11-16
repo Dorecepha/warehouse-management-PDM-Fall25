@@ -4,7 +4,9 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.pdm.backend.model.Supplier; 
 import org.pdm.backend.service.SupplierService; 
-import org.pdm.backend.wrappers.Response; 
+import org.pdm.backend.wrappers.Response;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -13,33 +15,35 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/suppliers")
 @RequiredArgsConstructor
 public class SupplierController {
+
     private final SupplierService supplierService;
-    @GetMapping
-    public ResponseEntity<Response> getAllSuppliers() {
-        Response response = supplierService.getAllSuppliers();
-        return ResponseEntity.ok(response);
+
+    @PostMapping("/add")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public ResponseEntity<Response> addSupplier(@RequestBody @Valid Supplier supplier) {
+        return ResponseEntity.ok(supplierService.createSupplier(supplier));
     }
+
+
+    @GetMapping("/all")
+    public ResponseEntity<Response> getAllSuppliers() {
+        return ResponseEntity.ok(supplierService.getAllSuppliers());
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<Response> getSupplierById(@PathVariable Long id) {
-        Response response = supplierService.getSupplierById(id);
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(supplierService.getSupplierById(id));
     }
-    @PostMapping
-    @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('MANAGER')")
-    public ResponseEntity<Response> createSupplier(@RequestBody @Valid Supplier supplier) {
-        Response response = supplierService.createSupplier(supplier);
-        return ResponseEntity.ok(response);
-    }
-    @PutMapping("/{id}")
-    @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('MANAGER')")
+
+    @PutMapping("/update/{id}")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<Response> updateSupplier(@PathVariable Long id, @RequestBody @Valid Supplier supplier) {
-        Response response = supplierService.updateSupplier(id, supplier);
-        return ResponseEntity.ok(response);
-    @DeleteMapping("/{id}")
+        return ResponseEntity.ok(supplierService.updateSupplier(id, supplier));
+    }
+
+    @DeleteMapping("/delete/{id}")
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<Response> deleteSupplier(@PathVariable Long id) {
-        Response response = supplierService.deleteSupplier(id);
-        return ResponseEntity.ok(response);
-    }
+        return ResponseEntity.ok(supplierService.deleteSupplier(id));
     }
 }
