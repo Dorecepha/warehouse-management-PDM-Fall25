@@ -1,13 +1,17 @@
 package org.pdm.backend.service;
 
 import org.pdm.backend.model.Category;
-import java.util.List;
+import org.pdm.backend.wrappers.Response;
 
 public interface CategoryService {
-    
-    Category createCategory(Category category);
-    Category getCategoryById(Long id);
-    List<Category> getAllCategories();
-    Category updateCategory(Long id, Category categoryDetails);
-    void deleteCategory(Long id);
+
+    Response createCategory(Category category);
+
+    Response getAllCategories();
+
+    Response getCategoryById(Long id);
+
+    Response updateCategory(Long id, Category categoryDetails);
+
+    Response deleteCategory(Long id);
 }
