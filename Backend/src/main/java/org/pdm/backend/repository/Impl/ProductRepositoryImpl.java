@@ -12,6 +12,7 @@ import org.pdm.backend.model.Product;
 import org.pdm.backend.repository.ProductRepository;
 
 public class ProductRepositoryImpl implements ProductRepository {
+
     @Override
     public Product save(Product productToSave) {
         String sql = "INSERT INTO products (name, sku, price, stock_quantity, description, expiry_date, image_url, category_id, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
