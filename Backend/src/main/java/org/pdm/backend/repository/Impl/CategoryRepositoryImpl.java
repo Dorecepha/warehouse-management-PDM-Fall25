@@ -18,7 +18,7 @@ public class CategoryRepositoryImpl implements CategoryRepository {
 
     private final JdbcTemplate jdbcTemplate;
 
-    private final RowMapper<Category> categoryRowMapper = (rs, rowNum) -> {
+    private final RowMapper<Category> mapRowToCategories = (rs, rowNum) -> {
         Category category = new Category();
         category.setId(rs.getLong("id"));
         category.setName(rs.getString("name"));
@@ -54,7 +54,7 @@ public class CategoryRepositoryImpl implements CategoryRepository {
     @Override
     public Optional<Category> findById(Long id) {
         String sql = "SELECT id, name FROM categories WHERE id = ?";
-        List<Category> results = jdbcTemplate.query(sql, categoryRowMapper, id);
+        List<Category> results = jdbcTemplate.query(sql, mapRowToCategories, id);
         if (results.isEmpty()) {
             return Optional.empty();
         }
@@ -64,7 +64,7 @@ public class CategoryRepositoryImpl implements CategoryRepository {
     @Override
     public List<Category> findAll() {
         String sql = "SELECT id, name FROM categories";
-        return jdbcTemplate.query(sql, categoryRowMapper);
+        return jdbcTemplate.query(sql, mapRowToCategories);
     }
 
     @Override
@@ -76,7 +76,7 @@ public class CategoryRepositoryImpl implements CategoryRepository {
     @Override
     public Category findByName(String name) {
         String sql = "SELECT id, name FROM categories WHERE name = ?";
-        List<Category> results = jdbcTemplate.query(sql, categoryRowMapper, name);
+        List<Category> results = jdbcTemplate.query(sql, mapRowToCategories, name);
         return results.isEmpty() ? null : results.get(0);
     }
     
