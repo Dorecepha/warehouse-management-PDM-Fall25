@@ -41,8 +41,7 @@ public class Product {
 
     @Builder.Default
     private LocalDateTime createdAt = LocalDateTime.now();
-
-
+    
     private Long categoryID;
 
 
@@ -59,5 +58,8 @@ public class Product {
                 ", imageUrl='" + imageUrl + '\'' +
                 ", createdAt=" + createdAt +
                 '}';
+    }
+
+    public void setProductId(Long productId) {
     }
 }
