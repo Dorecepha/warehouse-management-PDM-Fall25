@@ -1,166 +1,208 @@
-import React, { useState, useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useTransactions } from '../features/transactions/api';
-import PaginationComponent from '../components/PaginationComponent';
+import React, { useState } from 'react';
 
-function TransactionsPage() {
-  const [page, setPage] = useState(1);
-  const [search, setSearch] = useState('');
-  const [searchInput, setSearchInput] = useState('');
-  const navigate = useNavigate();
+const NAV_ITEMS = [
+  'Dashboard',
+  'Transaction',
+  'Category',
+  'Product',
+  'Supplier',
+  'Purchase',
+  'Sell',
+  'Profile',
+  'Logout',
+];
 
-  const { data, isLoading, isError, error, isFetching } = useTransactions({
-    page,
-    search,
-    limit: 10,
-  });
+const FILTER_TABS = ['All Transactions', 'Purchases', 'Sales'];
 
-  const handleSearchSubmit = (event) => {
-    event.preventDefault();
-    setPage(1);
-    setSearch(searchInput.trim());
-  };
+const TRANSACTION_DATA = [
+  {
+    id: 1,
+    date: '2025-11-16',
+    type: 'PURCHASE',
+    status: 'Processing',
+    totalProducts: 1,
+    totalPrice: 49,
+    product: 'Bike',
+  },
+  {
+    id: 2,
+    date: '2025-11-16',
+    type: 'SALE',
+    status: 'Pending',
+    totalProducts: 20,
+    totalPrice: 546,
+    product: 'Laptop',
+  },
+];
 
-  const columns = useMemo(
-    () => [
-      { key: 'transactionType', header: 'Type' },
-      { key: 'status', header: 'Status' },
-      { key: 'totalPrice', header: 'Total Price' },
-      { key: 'totalProducts', header: 'Total Products' },
-      { key: 'createdAt', header: 'Date' },
-      { key: 'actions', header: 'Actions' },
-    ],
-    []
-  );
+const Sidebar = () => (
+  <aside className="w-64 min-h-screen bg-blue-800 text-white flex flex-col items-center py-10 space-y-6">
+    <div className="w-24 h-24 rounded-full bg-blue-600 flex items-center justify-center text-xl font-semibold text-blue-100">
+      A
+    </div>
+    <div className="w-3/4 h-px bg-blue-600" />
+    <p className="text-lg font-medium">Name</p>
+    <nav className="w-full px-6 space-y-3">
+      {NAV_ITEMS.map((item) => (
+        <button
+          key={item}
+          type="button"
+          className={`w-full text-left rounded-full px-4 py-2 font-medium transition
+            ${item === 'Transaction'
+              ? 'bg-white/20 text-white'
+              : 'text-blue-100 hover:bg-white/10'}
+          `}
+        >
+          {item}
+        </button>
+      ))}
+    </nav>
+  </aside>
+);
 
-  const transactions = data?.transactions ?? [];
-  const totalPages = data?.meta?.totalPages ?? 1;
+const TransactionHeader = () => (
+  <header className="space-y-1">
+    <h1 className="text-3xl font-semibold text-gray-900">Transaction</h1>
+    <p className="text-gray-500">View all purchase and sale transactions</p>
+  </header>
+);
 
-  const getStatusClass = (status) => {
-    switch (status) {
-      case 'COMPLETED':
-        return 'bg-green-100 text-green-800';
-      case 'PENDING':
-        return 'bg-yellow-100 text-yellow-800';
-      case 'CANCELLED':
-        return 'bg-red-100 text-red-800';
-      case 'PROCESSING':
-        return 'bg-blue-100 text-blue-800';
-      default:
-        return 'bg-slate-100 text-slate-800';
-    }
-  };
+const TransactionSearchBar = () => (
+  <div className="mt-6">
+    <label htmlFor="transaction-search" className="sr-only">
+      Search transactions
+    </label>
+    <div className="flex items-center rounded-full bg-gray-100 px-4 py-3 text-gray-500">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        className="h-5 w-5 mr-3"
+      >
+        <circle cx="11" cy="11" r="8" />
+        <line x1="21" y1="21" x2="16.65" y2="16.65" />
+      </svg>
+      <input
+        id="transaction-search"
+        type="text"
+        placeholder="Search by reference, party, or product..."
+        className="flex-1 bg-transparent text-gray-700 placeholder-gray-500 focus:outline-none"
+      />
+    </div>
+  </div>
+);
+
+const TransactionFilters = ({ activeFilter, onFilterChange }) => (
+  <div className="mt-6 flex flex-wrap gap-3">
+    {FILTER_TABS.map((tab) => (
+      <button
+        key={tab}
+        type="button"
+        onClick={() => onFilterChange(tab)}
+        className={`rounded-full px-6 py-2 text-sm font-medium transition
+          ${activeFilter === tab
+            ? 'bg-gray-900 text-white'
+            : 'bg-white text-gray-700 border border-gray-200 hover:border-gray-300'}
+        `}
+      >
+        {tab}
+      </button>
+    ))}
+  </div>
+);
+
+const TypeBadge = ({ type }) => {
+  const styles =
+    type === 'PURCHASE'
+      ? 'bg-red-500/10 text-red-600 border border-red-500/30'
+      : 'bg-black text-white';
 
   return (
-    <div className="space-y-6">
-      <header className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <h1 className="text-2xl font-semibold text-slate-900">
-            Transactions
-          </h1>
-          <p className="text-sm text-slate-500">
-            View all purchases, sales, and returns.
-          </p>
-        </div>
-        <form
-          onSubmit={handleSearchSubmit}
-          className="flex w-full max-w-sm gap-2"
-        >
-          <input
-            value={searchInput}
-            onChange={(e) => setSearchInput(e.target.value)}
-            placeholder="Search by type, status..."
-            className="flex-1 rounded-md border border-slate-300 bg-white px-3 py-2 text-sm shadow-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
-          />
-          <button
-            type="submit"
-            className="rounded-md bg-white px-4 py-2 text-sm font-medium text-slate-700 shadow-sm ring-1 ring-slate-200 hover:bg-slate-50"
-          >
-            Search
-          </button>
-        </form>
-      </header>
+    <span className={`inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs font-semibold ${styles}`}>
+      <span className="text-base leading-none">↗</span>
+      {type}
+    </span>
+  );
+};
 
-      {isLoading ? (
-        <div className="rounded-lg border border-dashed border-slate-300 bg-white p-10 text-center text-slate-600">
-          Loading transactions...
-        </div>
-      ) : isError ? (
-        <div className="rounded-lg border border-red-200 bg-red-50 p-6 text-red-700">
-          {error.message}
-        </div>
-      ) : transactions.length === 0 ? (
-        <div className="rounded-lg border border-dashed border-slate-300 bg-white p-10 text-center text-slate-500">
-          No transactions found.
-        </div>
-      ) : (
-        <div className="overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm">
-          <table className="min-w-full divide-y divide-slate-200">
-            <thead className="bg-slate-50">
-              <tr>
-                {columns.map((column) => (
-                  <th
-                    key={column.key}
-                    scope="col"
-                    className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wide text-slate-600"
-                  >
-                    {column.header}
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-200">
-              {transactions.map((tx) => (
-                <tr key={tx.id} className="hover:bg-slate-50">
-                  <td className="px-4 py-3 text-sm font-medium text-slate-900">
-                    {tx.transactionType}
-                  </td>
-                  <td className="px-4 py-3 text-sm">
-                    <span
-                      className={`inline-flex rounded-full px-2 text-xs font-semibold leading-5 ${getStatusClass(
-                        tx.status
-                      )}`}
-                    >
-                      {tx.status}
-                    </span>
-                  </td>
-                  <td className="px-4 py-3 text-sm text-slate-700">
-                    ${tx.totalPrice?.toFixed(2)}
-                  </td>
-                  <td className="px-4 py-3 text-sm text-slate-700">
-                    {tx.totalProducts}
-                  </td>
-                  <td className="px-4 py-3 text-sm text-slate-700">
-                    {new Date(tx.createdAt).toLocaleString()}
-                  </td>
-                  <td className="px-4 py-3 text-sm">
-                    <button
-                      onClick={() => navigate(`/transactions/${tx.id}`)}
-                      className="font-medium text-primary hover:text-primary/80"
-                    >
-                      View Details
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
+const TransactionRow = ({ transaction }) => (
+  <tr className="border-b border-gray-100 text-sm text-gray-700 last:border-0">
+    <td className="py-4 pr-6 font-medium text-gray-900">{transaction.date}</td>
+    <td className="py-4 pr-6"><TypeBadge type={transaction.type} /></td>
+    <td className="py-4 pr-6">{transaction.status}</td>
+    <td className="py-4 pr-6">{transaction.totalProducts}</td>
+    <td className="py-4 pr-6 font-semibold text-gray-900">${transaction.totalPrice}</td>
+    <td className="py-4 pr-6">{transaction.product}</td>
+    <td className="py-4">
+      <button type="button" className="text-indigo-600 font-medium hover:text-indigo-500">
+        View Details
+      </button>
+    </td>
+  </tr>
+);
 
-      {totalPages > 1 && (
-        <footer className="flex flex-col items-center justify-between gap-3 sm:flex-row">
-          <p className="text-sm text-slate-500">
-            Page {page} of {totalPages}{' '}
-            {isFetching && !isLoading ? '· Updating…' : ''}
-          </p>
-          <PaginationComponent
-            currentPage={page}
-            totalPages={totalPages}
-            onPageChange={setPage}
-          />
-        </footer>
-      )}
+const TransactionTable = () => (
+  <div className="mt-8 rounded-3xl border border-gray-200 bg-white p-6 shadow-sm">
+    <div className="overflow-x-auto">
+      <table className="w-full text-left">
+        <thead>
+          <tr className="text-xs font-semibold uppercase tracking-wide text-gray-500 border-b border-gray-100">
+            <th className="py-3 pr-6">Date</th>
+            <th className="py-3 pr-6">Type</th>
+            <th className="py-3 pr-6">Status</th>
+            <th className="py-3 pr-6">Total Products</th>
+            <th className="py-3 pr-6">Total Price</th>
+            <th className="py-3 pr-6">Product</th>
+            <th className="py-3">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {TRANSACTION_DATA.map((transaction) => (
+            <TransactionRow key={transaction.id} transaction={transaction} />
+          ))}
+        </tbody>
+      </table>
+    </div>
+  </div>
+);
+
+const PaginationControls = () => (
+  <div className="mt-8 flex justify-center gap-3">
+    {['<< Prev', '1', '2', '3', 'Next >>'].map((label) => (
+      <button
+        key={label}
+        type="button"
+        className={`rounded-full px-4 py-2 text-sm font-medium
+          ${label === '1'
+            ? 'bg-gray-900 text-white'
+            : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}
+        `}
+      >
+        {label}
+      </button>
+    ))}
+  </div>
+);
+
+function TransactionsPage() {
+  const [activeFilter, setActiveFilter] = useState(FILTER_TABS[0]);
+
+  return (
+    <div className="min-h-screen bg-gray-800 flex">
+      <Sidebar />
+      <main className="flex-1 flex items-center justify-center py-10 px-4">
+        <section className="w-full max-w-5xl rounded-3xl border border-gray-200 bg-white p-10 shadow-xl">
+          <TransactionHeader />
+          <TransactionSearchBar />
+          <TransactionFilters activeFilter={activeFilter} onFilterChange={setActiveFilter} />
+          <TransactionTable />
+          <PaginationControls />
+        </section>
+      </main>
     </div>
   );
 }
