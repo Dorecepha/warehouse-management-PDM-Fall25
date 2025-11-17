@@ -30,7 +30,9 @@ app_dependencies=(
   "axios"
   "@tanstack/react-query"
   "react-hook-form"
+  "@hookform/resolvers"
   "zod"
+  "recharts"
 )
 if ((${#app_dependencies[@]} > 0)); then
   npm install "${app_dependencies[@]}"
@@ -39,6 +41,7 @@ fi
 print_section 'Installing development dependencies'
 dev_dependencies=(
   "prettier"
+  "eslint"
   "eslint-config-prettier"
   "eslint-plugin-prettier"
 )
