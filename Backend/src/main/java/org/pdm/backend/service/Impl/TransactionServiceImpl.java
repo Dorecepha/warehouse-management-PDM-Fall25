@@ -212,7 +212,7 @@ public class TransactionServiceImpl implements TransactionService {
             existingTransaction.setStatus(transactionStatus);
             existingTransaction.setUpdateAt(LocalDateTime.now());
 
-            transactionRepository.update(existingTransaction);
+            transactionRepository.updateStatus(transactionId, transactionStatus);
 
             return Response.builder()
                     .status(200)

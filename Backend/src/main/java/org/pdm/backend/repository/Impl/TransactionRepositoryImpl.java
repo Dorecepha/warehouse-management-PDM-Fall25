@@ -29,7 +29,7 @@ public class TransactionRepositoryImpl implements TransactionRepository {
     private final UserRepository userRepository;
     @Override
     public Transaction save(Transaction transaction) {
-        String sql = "INSERT INTO transactions (total_products, total_price, transaction_type, status, description, note, product_id, user_id, supplier_id, create_at, update_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO transactions (total_products, total_price, transaction_type, status, description, note, product_id, user_id, supplier_id, created_at, update_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try(Connection conn= DatabaseConfig.getConnection();
             PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)){
             ps.setInt(1, transaction.getTotalProducts());
@@ -197,8 +197,19 @@ public class TransactionRepositoryImpl implements TransactionRepository {
         transaction.setId(rs.getLong("id"));
         transaction.setTotalProducts(rs.getInt("total_products"));
         transaction.setTotalPrice(rs.getBigDecimal("total_price"));
-        transaction.setTransactionType(TransactionType.valueOf(rs.getString("transaction_type")));
-        transaction.setStatus(TransactionStatus.valueOf(rs.getString("status")));
+        String type = rs.getString("transaction_type");
+        if (type != null) {
+            try {
+                transaction.setTransactionType(TransactionType.valueOf(type));
+            } catch (Exception ignore) {}
+        }
+
+        String status = rs.getString("status");
+        if (status != null) {
+            try {
+                transaction.setStatus(TransactionStatus.valueOf(status));
+            } catch (Exception ignore) {}
+        }
         transaction.setDescription(rs.getString("description"));
         transaction.setNote(rs.getString("note"));
         transaction.setProductId(rs.getLong("product_id"));
@@ -292,11 +303,12 @@ public class TransactionRepositoryImpl implements TransactionRepository {
 
     @Override
     public Transaction updateStatus(Long id, TransactionStatus status) {
-        String sql = "UPDATE transactions SET status = ? WHERE id = ?";
+        String sql = "UPDATE transactions SET status = ?, update_at = ? WHERE id = ?";
         try(Connection conn= DatabaseConfig.getConnection();
             PreparedStatement ps = conn.prepareStatement(sql)){
             ps.setString(1, status.name());
-            ps.setLong(2, id);
+            ps.setTimestamp(2, Timestamp.valueOf(LocalDateTime.now()));
+            ps.setLong(3, id);
             int rowsAffected = ps.executeUpdate();
             if (rowsAffected > 0) {
                 return findById(id).orElse(null);
