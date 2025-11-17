@@ -9,6 +9,7 @@ import org.pdm.backend.model.Supplier;
 import org.pdm.backend.model.Transaction;
 import org.pdm.backend.model.User;
 import org.pdm.backend.repository.ProductRepository;
+import org.pdm.backend.repository.SupplierRepository;
 import org.pdm.backend.repository.TransactionRepository;
 import org.pdm.backend.service.TransactionService;
 import org.pdm.backend.service.UserService;
@@ -17,12 +18,6 @@ import org.pdm.backend.wrappers.TransactionRequest;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.modelmapper.ModelMapper;
-import org.modelmapper.TypeToken;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -154,18 +149,34 @@ public class TransactionServiceImpl implements TransactionService {
                     .build();
         }
 
-        @Override
-        public Response getAllTransactions(int page, int size, String searchText) {
+    @Override
+    public Response getAllTransactions(int page, int size, String filter) {
 
-            // manual pagination logic if needed
-            List<Transaction> transactions = transactionRepository.searchTransactions( page, size, searchText);
+        // 1. Fetch paginated + filtered transactions
+        List<Transaction> transactions =
+                transactionRepository.findAllFilteredPaged(filter, page, size);
 
-            return Response.builder()
-                    .status(200)
-                    .message("success")
-                    .transactions(transactions)
-                    .build();
-        }
+        // 2. Get count for pagination metadata
+        long totalElements =
+                transactionRepository.countFiltered(filter);
+
+        int totalPages = (int) Math.ceil((double) totalElements / size);
+
+        // 3. Optional: Remove nested objects if needed
+        transactions.forEach(t -> {
+            t.setUserId(null);
+            t.setProductId(null);
+            t.setSupplierId(null);
+        });
+
+        return Response.builder()
+                .status(200)
+                .message("success")
+                .transactions(transactions)
+                .totalElements(totalElements)
+                .totalPages(totalPages)
+                .build();
+    }
 
         @Override
         public Response getTransactionById(Long id) {

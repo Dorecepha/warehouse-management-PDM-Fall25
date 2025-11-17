@@ -11,6 +11,7 @@ import org.pdm.backend.enums.TransactionType;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -38,10 +39,14 @@ public class Transaction {
 
 
     private Long productId;
+    private Product product;
 
     private Long userId;
+    private User user;
 
     private Long supplierId;
+    private Supplier supplier;
+
 
     @Override
     public String toString() {
@@ -57,4 +62,6 @@ public class Transaction {
                 ", updateAt=" + updateAt +
                 '}';
     }
+
+
 }
