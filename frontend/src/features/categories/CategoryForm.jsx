@@ -73,3 +73,4 @@ function CategoryForm({
 }
 
 export default CategoryForm;
+export { categoryFormDefaultValues };

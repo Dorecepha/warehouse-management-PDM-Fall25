@@ -27,28 +27,24 @@ function ProfileForm({
   const submitting = isSubmitting || isSubmittingProp;
 
   return (
-    <form
-      onSubmit={handleSubmit(onSubmit)}
-      className="space-y-6 rounded-lg border border-slate-200 bg-white p-6 shadow-sm"
-      noValidate
-    >
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-8" noValidate>
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
         <div className="space-y-2">
           <label
             htmlFor="name"
-            className="block text-sm font-medium text-slate-700"
+            className="text-sm font-semibold text-slate-600"
           >
             Name
           </label>
           <input
             id="name"
             type="text"
-            className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm shadow-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
+            className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 placeholder:text-slate-400 focus:border-[#6e56cf] focus:outline-none focus:ring-2 focus:ring-[#6e56cf]/30"
             {...register('name')}
             aria-invalid={errors.name ? 'true' : 'false'}
           />
           {errors.name ? (
-            <p className="text-sm text-red-600" role="alert">
+            <p className="text-xs text-red-600" role="alert">
               {errors.name.message}
             </p>
           ) : null}
@@ -57,19 +53,19 @@ function ProfileForm({
         <div className="space-y-2">
           <label
             htmlFor="email"
-            className="block text-sm font-medium text-slate-700"
+            className="text-sm font-semibold text-slate-600"
           >
             Email
           </label>
           <input
             id="email"
             type="email"
-            className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm shadow-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
+            className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 placeholder:text-slate-400 focus:border-[#6e56cf] focus:outline-none focus:ring-2 focus:ring-[#6e56cf]/30"
             {...register('email')}
             aria-invalid={errors.email ? 'true' : 'false'}
           />
           {errors.email ? (
-            <p className="text-sm text-red-600" role="alert">
+            <p className="text-xs text-red-600" role="alert">
               {errors.email.message}
             </p>
           ) : null}
@@ -78,49 +74,54 @@ function ProfileForm({
         <div className="space-y-2 md:col-span-2">
           <label
             htmlFor="phoneNumber"
-            className="block text-sm font-medium text-slate-700"
+            className="text-sm font-semibold text-slate-600"
           >
             Phone Number
           </label>
           <input
             id="phoneNumber"
             type="text"
-            className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm shadow-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
+            className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 placeholder:text-slate-400 focus:border-[#6e56cf] focus:outline-none focus:ring-2 focus:ring-[#6e56cf]/30"
             {...register('phoneNumber')}
             aria-invalid={errors.phoneNumber ? 'true' : 'false'}
           />
           {errors.phoneNumber ? (
-            <p className="text-sm text-red-600" role="alert">
+            <p className="text-xs text-red-600" role="alert">
               {errors.phoneNumber.message}
             </p>
           ) : null}
         </div>
+      </div>
 
-        <div className="space-y-2 border-t border-slate-200 pt-6 md:col-span-2">
-          <p className="text-sm font-medium text-slate-700">
-            Change Password (Optional)
-          </p>
-          <p className="text-xs text-slate-500">
-            Leave both fields blank to keep your current password.
-          </p>
-        </div>
+      <div className="h-px w-full bg-slate-200" />
 
+      <div className="space-y-2">
+        <p className="text-sm font-semibold text-slate-700">
+          Change Password (Optional)
+        </p>
+        <p className="text-xs text-slate-500">
+          Leave the fields below blank if you don’t want to change your
+          password.
+        </p>
+      </div>
+
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
         <div className="space-y-2">
           <label
             htmlFor="password"
-            className="block text-sm font-medium text-slate-700"
+            className="text-sm font-semibold text-slate-600"
           >
             New Password
           </label>
           <input
             id="password"
             type="password"
-            className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm shadow-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
+            className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 placeholder:text-slate-400 focus:border-[#6e56cf] focus:outline-none focus:ring-2 focus:ring-[#6e56cf]/30"
             {...register('password')}
             aria-invalid={errors.password ? 'true' : 'false'}
           />
           {errors.password ? (
-            <p className="text-sm text-red-600" role="alert">
+            <p className="text-xs text-red-600" role="alert">
               {errors.password.message}
             </p>
           ) : null}
@@ -129,35 +130,37 @@ function ProfileForm({
         <div className="space-y-2">
           <label
             htmlFor="confirmPassword"
-            className="block text-sm font-medium text-slate-700"
+            className="text-sm font-semibold text-slate-600"
           >
             Confirm New Password
           </label>
           <input
             id="confirmPassword"
             type="password"
-            className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm shadow-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
+            className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 placeholder:text-slate-400 focus:border-[#6e56cf] focus:outline-none focus:ring-2 focus:ring-[#6e56cf]/30"
             {...register('confirmPassword')}
             aria-invalid={errors.confirmPassword ? 'true' : 'false'}
           />
           {errors.confirmPassword ? (
-            <p className="text-sm text-red-600" role="alert">
+            <p className="text-xs text-red-600" role="alert">
               {errors.confirmPassword.message}
             </p>
           ) : null}
         </div>
       </div>
 
+      <div className="h-px w-full bg-slate-200" />
+
       {serverError ? (
-        <div className="rounded-md border border-red-200 bg-red-50 p-3 text-sm text-red-700">
+        <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
           {serverError}
         </div>
       ) : null}
 
-      <div className="flex justify-end gap-3 border-t border-slate-200 pt-6">
+      <div className="flex justify-end">
         <button
           type="submit"
-          className="inline-flex items-center rounded-md bg-primary px-4 py-2 text-sm font-semibold text-white shadow-sm transition focus:outline-none focus:ring-2 focus:ring-primary/20 disabled:cursor-not-allowed disabled:opacity-60"
+          className="inline-flex items-center rounded-full bg-[#6e56cf] px-8 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-[#5a46b5] focus:outline-none focus:ring-2 focus:ring-[#6e56cf]/40 disabled:cursor-not-allowed disabled:opacity-60"
           disabled={submitting}
         >
           {submitting ? 'Saving…' : submitLabel}

@@ -52,90 +52,90 @@ function LoginPage() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-slate-100 px-4 py-16">
-      <div className="w-full max-w-md space-y-6 rounded-lg border border-slate-200 bg-white p-8 shadow-sm">
-        <div className="space-y-2 text-center">
-          <h1 className="text-2xl font-semibold text-slate-900">Sign in</h1>
-          <p className="text-sm text-slate-500">
-            Access your warehouse management tools.
+    <div className="flex min-h-screen items-center justify-center bg-[#e7f1fb] p-4">
+      <div className="flex min-h-[calc(100vh-2rem)] w-full items-center justify-center rounded-[48px] border-[18px] border-[#1f5f89] bg-white p-6">
+        <div className="w-full max-w-sm rounded-2xl bg-[#1f5f89] px-8 py-10 text-white">
+          <div className="space-y-1">
+            <h1 className="text-4xl font-bold leading-tight">Login</h1>
+            <p className="text-lg font-medium text-white/90">
+              Warehouse Management System
+            </p>
+          </div>
+
+          <form
+            onSubmit={handleSubmit(onSubmit)}
+            className="mt-8 space-y-5"
+            noValidate
+          >
+            <div className="space-y-2">
+              <label
+                htmlFor="email"
+                className="block text-sm font-semibold text-white"
+              >
+                Username
+              </label>
+              <input
+                id="email"
+                type="email"
+                autoComplete="email"
+                className="w-full rounded-lg border border-white/50 bg-white px-4 py-2 text-sm text-slate-900 placeholder:text-slate-400 focus:border-[#1f5f89] focus:outline-none"
+                placeholder="Enter your username"
+                {...register('email')}
+                aria-invalid={errors.email ? 'true' : 'false'}
+              />
+              {errors.email ? (
+                <p className="text-xs text-red-200" role="alert">
+                  {errors.email.message}
+                </p>
+              ) : null}
+            </div>
+
+            <div className="space-y-2">
+              <label
+                htmlFor="password"
+                className="block text-sm font-semibold text-white"
+              >
+                Password
+              </label>
+              <input
+                id="password"
+                type="password"
+                autoComplete="current-password"
+                className="w-full rounded-lg border border-white/50 bg-white px-4 py-2 text-sm text-slate-900 placeholder:text-slate-400 focus:border-[#1f5f89] focus:outline-none"
+                placeholder="Enter your password"
+                {...register('password')}
+                aria-invalid={errors.password ? 'true' : 'false'}
+              />
+              {errors.password ? (
+                <p className="text-xs text-red-200" role="alert">
+                  {errors.password.message}
+                </p>
+              ) : null}
+              {serverError ? (
+                <p className="text-xs font-semibold text-red-300">
+                  Username or Password is incorrect
+                </p>
+              ) : null}
+            </div>
+
+            <div className="pt-2 text-center">
+              <button
+                type="submit"
+                className="inline-flex w-full items-center justify-center rounded-full border border-white/60 bg-white px-6 py-2 text-sm font-bold text-slate-900 transition hover:bg-white/90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white/70 disabled:cursor-not-allowed disabled:opacity-60"
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? 'Signing in…' : 'SIGN IN'}
+              </button>
+            </div>
+          </form>
+
+          <p className="mt-6 text-center text-xs text-white/80">
+            Don’t have an account?{' '}
+            <Link to="/register" className="font-semibold text-white">
+              Create your account
+            </Link>
           </p>
         </div>
-
-        <form
-          onSubmit={handleSubmit(onSubmit)}
-          className="space-y-5"
-          noValidate
-        >
-          <div className="space-y-2">
-            <label
-              htmlFor="email"
-              className="block text-sm font-medium text-slate-700"
-            >
-              Email
-            </label>
-            <input
-              id="email"
-              type="email"
-              autoComplete="email"
-              className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm shadow-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
-              placeholder="you@example.com"
-              {...register('email')}
-              aria-invalid={errors.email ? 'true' : 'false'}
-            />
-            {errors.email ? (
-              <p className="text-sm text-red-600" role="alert">
-                {errors.email.message}
-              </p>
-            ) : null}
-          </div>
-
-          <div className="space-y-2">
-            <label
-              htmlFor="password"
-              className="block text-sm font-medium text-slate-700"
-            >
-              Password
-            </label>
-            <input
-              id="password"
-              type="password"
-              autoComplete="current-password"
-              className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm shadow-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
-              placeholder="••••••••"
-              {...register('password')}
-              aria-invalid={errors.password ? 'true' : 'false'}
-            />
-            {errors.password ? (
-              <p className="text-sm text-red-600" role="alert">
-                {errors.password.message}
-              </p>
-            ) : null}
-          </div>
-
-          {serverError ? (
-            <div className="rounded-md border border-red-200 bg-red-50 p-3 text-sm text-red-700">
-              {serverError}
-            </div>
-          ) : null}
-
-          <button
-            type="submit"
-            className="inline-flex w-full justify-center rounded-md bg-primary px-4 py-2 text-sm font-semibold text-white shadow-sm transition focus:outline-none focus:ring-2 focus:ring-primary/20 disabled:cursor-not-allowed disabled:opacity-60"
-            disabled={isSubmitting}
-          >
-            {isSubmitting ? 'Signing in…' : 'Sign in'}
-          </button>
-        </form>
-
-        <p className="text-center text-sm text-slate-600">
-          Don't have an account?{' '}
-          <Link
-            to="/register"
-            className="font-medium text-primary hover:text-primary/80"
-          >
-            Sign up
-          </Link>
-        </p>
       </div>
     </div>
   );

@@ -37,7 +37,7 @@ export function AdminRoute({ children }) {
   }
 
   if (!isAdmin()) {
-    return <Navigate to="/records" replace />;
+    return <Navigate to="/login" replace state={{ from: location }} />;
   }
 
   return children;

@@ -5,8 +5,6 @@ import { profileFormDefaultValues } from '../features/users/profileSchema';
 import { useCurrentUser, useUpdateUser } from '../features/users/api';
 
 function ProfilePage() {
-  const navigate = useNavigate();
-
   const {
     data: currentUserData,
     isLoading,
@@ -15,7 +13,9 @@ function ProfilePage() {
   } = useCurrentUser();
 
   const { mutate, isPending, error: updateError } = useUpdateUser();
+  const navigate = useNavigate();
   const [serverError, setServerError] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
 
   const defaultValues = useMemo(() => {
     if (!currentUserData) {
@@ -32,6 +32,7 @@ function ProfilePage() {
 
   const handleSubmit = (formData) => {
     setServerError('');
+    setSuccessMessage('');
     const { password, confirmPassword, ...rest } = formData;
 
     const payload = { ...rest };
@@ -44,10 +45,11 @@ function ProfilePage() {
       { id: currentUserData.id, data: payload },
       {
         onSuccess: () => {
-          navigate('/records');
+          setSuccessMessage('Profile updated successfully.');
         },
         onError: (err) => {
           setServerError(err.message || 'Failed to update profile.');
+          setSuccessMessage('');
         },
       }
     );
@@ -70,24 +72,33 @@ function ProfilePage() {
   }
 
   return (
-    <div className="space-y-6">
-      <header className="space-y-1">
-        <h1 className="text-2xl font-semibold text-slate-900">
-          Hello, {currentUserData.name} 🥳
+    <section>
+      <header className="space-y-2">
+        <h1 className="text-3xl font-semibold text-slate-900">
+          Hello, {currentUserData.name}
         </h1>
         <p className="text-sm text-slate-500">
-          Update your personal information or change your password.
+          Keep your personal information up to date and update your password
+          when needed.
         </p>
       </header>
 
-      <ProfileForm
-        defaultValues={defaultValues}
-        submitLabel="Update Profile"
-        onSubmit={handleSubmit}
-        isSubmitting={isPending}
-        serverError={serverError || updateError?.message}
-      />
-    </div>
+      {successMessage && (
+        <div className="mt-6 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700">
+          {successMessage}
+        </div>
+      )}
+
+      <div className="mt-8">
+        <ProfileForm
+          defaultValues={defaultValues}
+          submitLabel="Update Profile"
+          onSubmit={handleSubmit}
+          isSubmitting={isPending}
+          serverError={serverError || updateError?.message}
+        />
+      </div>
+    </section>
   );
 }
 

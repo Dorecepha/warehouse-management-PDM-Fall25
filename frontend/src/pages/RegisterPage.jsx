@@ -49,157 +49,169 @@ function RegisterPage() {
     }
   };
 
+  const hasValidationError = Object.keys(errors).length > 0;
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-slate-100 px-4 py-16">
-      <div className="w-full max-w-md space-y-6 rounded-lg border border-slate-200 bg-white p-8 shadow-sm">
-        <div className="space-y-2 text-center">
-          <h1 className="text-2xl font-semibold text-slate-900">
-            Create an Account
-          </h1>
-          <p className="text-sm text-slate-500">
-            Get started with your warehouse.
+    <div className="flex min-h-screen items-center justify-center bg-[#e7f1fb] p-4">
+      <div className="flex min-h-[calc(100vh-2rem)] w-full items-center justify-center rounded-[48px] border-[18px] border-[#1f5f89] bg-white p-6">
+        <div className="w-full max-w-sm rounded-2xl bg-[#1f5f89] px-8 py-10 text-white">
+          <div className="space-y-1">
+            <h1 className="text-4xl font-bold leading-tight">Register</h1>
+            <p className="text-lg font-medium text-white/90">
+              Warehouse Management System
+            </p>
+          </div>
+
+          <form
+            onSubmit={handleSubmit(onSubmit)}
+            className="mt-8 space-y-4"
+            noValidate
+          >
+            <div className="space-y-1.5">
+              <label
+                htmlFor="name"
+                className="block text-sm font-semibold text-white"
+              >
+                Username
+              </label>
+              <input
+                id="name"
+                type="text"
+                autoComplete="name"
+                className="w-full rounded-lg border border-white/50 bg-white px-4 py-2 text-sm text-slate-900 placeholder:text-slate-400 focus:border-[#1f5f89] focus:outline-none"
+                placeholder="Enter your username"
+                {...register('name')}
+                aria-invalid={errors.name ? 'true' : 'false'}
+              />
+              {errors.name && (
+                <p className="sr-only" role="alert">
+                  {errors.name.message}
+                </p>
+              )}
+            </div>
+
+            <div className="space-y-1.5">
+              <label
+                htmlFor="email"
+                className="block text-sm font-semibold text-white"
+              >
+                Email
+              </label>
+              <input
+                id="email"
+                type="email"
+                autoComplete="email"
+                className="w-full rounded-lg border border-white/50 bg-white px-4 py-2 text-sm text-slate-900 placeholder:text-slate-400 focus:border-[#1f5f89] focus:outline-none"
+                placeholder="Enter your email"
+                {...register('email')}
+                aria-invalid={errors.email ? 'true' : 'false'}
+              />
+              {errors.email && (
+                <p className="sr-only" role="alert">
+                  {errors.email.message}
+                </p>
+              )}
+            </div>
+
+            <div className="space-y-1.5">
+              <label
+                htmlFor="phoneNumber"
+                className="block text-sm font-semibold text-white"
+              >
+                Phone Number
+              </label>
+              <input
+                id="phoneNumber"
+                type="text"
+                autoComplete="tel"
+                className="w-full rounded-lg border border-white/50 bg-white px-4 py-2 text-sm text-slate-900 placeholder:text-slate-400 focus:border-[#1f5f89] focus:outline-none"
+                placeholder="Enter your phone number"
+                {...register('phoneNumber')}
+                aria-invalid={errors.phoneNumber ? 'true' : 'false'}
+              />
+              {errors.phoneNumber && (
+                <p className="sr-only" role="alert">
+                  {errors.phoneNumber.message}
+                </p>
+              )}
+            </div>
+
+            <div className="space-y-1.5">
+              <label
+                htmlFor="password"
+                className="block text-sm font-semibold text-white"
+              >
+                Password
+              </label>
+              <input
+                id="password"
+                type="password"
+                autoComplete="new-password"
+                className="w-full rounded-lg border border-white/50 bg-white px-4 py-2 text-sm text-slate-900 placeholder:text-slate-400 focus:border-[#1f5f89] focus:outline-none"
+                placeholder="Enter your password"
+                {...register('password')}
+                aria-invalid={errors.password ? 'true' : 'false'}
+              />
+              {errors.password && (
+                <p className="sr-only" role="alert">
+                  {errors.password.message}
+                </p>
+              )}
+            </div>
+
+            <div className="space-y-1.5">
+              <label
+                htmlFor="confirmPassword"
+                className="block text-sm font-semibold text-white"
+              >
+                Confirm Password
+              </label>
+              <input
+                id="confirmPassword"
+                type="password"
+                autoComplete="new-password"
+                className="w-full rounded-lg border border-white/50 bg-white px-4 py-2 text-sm text-slate-900 placeholder:text-slate-400 focus:border-[#1f5f89] focus:outline-none"
+                placeholder="Confirm your password"
+                {...register('confirmPassword')}
+                aria-invalid={errors.confirmPassword ? 'true' : 'false'}
+              />
+              {errors.confirmPassword && (
+                <p className="sr-only" role="alert">
+                  {errors.confirmPassword.message}
+                </p>
+              )}
+            </div>
+
+            {hasValidationError && (
+              <p className="text-xs font-semibold text-red-300">
+                Please fill out all the fields correctly
+              </p>
+            )}
+
+            {serverError && (
+              <p className="text-xs font-semibold text-red-100">
+                {serverError}
+              </p>
+            )}
+
+            <div className="pt-1 text-center">
+              <button
+                type="submit"
+                className="inline-flex w-full items-center justify-center rounded-full border border-white/60 bg-white px-8 py-2 text-sm font-bold text-slate-900 transition hover:bg-white/90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white/60 disabled:cursor-not-allowed disabled:opacity-60"
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? 'Signing up…' : 'SIGN UP'}
+              </button>
+            </div>
+          </form>
+
+          <p className="mt-6 text-center text-xs text-white/80">
+            Have an account?{' '}
+            <Link to="/login" className="font-semibold text-white">
+              Sign in
+            </Link>
           </p>
         </div>
-
-        <form
-          onSubmit={handleSubmit(onSubmit)}
-          className="space-y-5"
-          noValidate
-        >
-          <div className="space-y-2">
-            <label
-              htmlFor="name"
-              className="block text-sm font-medium text-slate-700"
-            >
-              Name
-            </label>
-            <input
-              id="name"
-              type="text"
-              autoComplete="name"
-              className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm shadow-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
-              {...register('name')}
-              aria-invalid={errors.name ? 'true' : 'false'}
-            />
-            {errors.name && (
-              <p className="text-sm text-red-600" role="alert">
-                {errors.name.message}
-              </p>
-            )}
-          </div>
-
-          <div className="space-y-2">
-            <label
-              htmlFor="email"
-              className="block text-sm font-medium text-slate-700"
-            >
-              Email
-            </label>
-            <input
-              id="email"
-              type="email"
-              autoComplete="email"
-              className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm shadow-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
-              {...register('email')}
-              aria-invalid={errors.email ? 'true' : 'false'}
-            />
-            {errors.email && (
-              <p className="text-sm text-red-600" role="alert">
-                {errors.email.message}
-              </p>
-            )}
-          </div>
-
-          <div className="space-y-2">
-            <label
-              htmlFor="phoneNumber"
-              className="block text-sm font-medium text-slate-700"
-            >
-              Phone Number
-            </label>
-            <input
-              id="phoneNumber"
-              type="text"
-              autoComplete="tel"
-              className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm shadow-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
-              {...register('phoneNumber')}
-              aria-invalid={errors.phoneNumber ? 'true' : 'false'}
-            />
-            {errors.phoneNumber && (
-              <p className="text-sm text-red-600" role="alert">
-                {errors.phoneNumber.message}
-              </p>
-            )}
-          </div>
-
-          <div className="space-y-2">
-            <label
-              htmlFor="password"
-              className="block text-sm font-medium text-slate-700"
-            >
-              Password
-            </label>
-            <input
-              id="password"
-              type="password"
-              autoComplete="new-password"
-              className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm shadow-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
-              {...register('password')}
-              aria-invalid={errors.password ? 'true' : 'false'}
-            />
-            {errors.password && (
-              <p className="text-sm text-red-600" role="alert">
-                {errors.password.message}
-              </p>
-            )}
-          </div>
-
-          <div className="space-y-2">
-            <label
-              htmlFor="confirmPassword"
-              className="block text-sm font-medium text-slate-700"
-            >
-              Confirm Password
-            </label>
-            <input
-              id="confirmPassword"
-              type="password"
-              autoComplete="new-password"
-              className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm shadow-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
-              {...register('confirmPassword')}
-              aria-invalid={errors.confirmPassword ? 'true' : 'false'}
-            />
-            {errors.confirmPassword && (
-              <p className="text-sm text-red-600" role="alert">
-                {errors.confirmPassword.message}
-              </p>
-            )}
-          </div>
-
-          {serverError && (
-            <div className="rounded-md border border-red-200 bg-red-50 p-3 text-sm text-red-700">
-              {serverError}
-            </div>
-          )}
-
-          <button
-            type="submit"
-            className="inline-flex w-full justify-center rounded-md bg-primary px-4 py-2 text-sm font-semibold text-white shadow-sm transition focus:outline-none focus:ring-2 focus:ring-primary/20 disabled:cursor-not-allowed disabled:opacity-60"
-            disabled={isSubmitting}
-          >
-            {isSubmitting ? 'Creating Account…' : 'Create Account'}
-          </button>
-        </form>
-
-        <p className="text-center text-sm text-slate-600">
-          Already have an account?{' '}
-          <Link
-            to="/login"
-            className="font-medium text-primary hover:text-primary/80"
-          >
-            Sign in
-          </Link>
-        </p>
       </div>
     </div>
   );
