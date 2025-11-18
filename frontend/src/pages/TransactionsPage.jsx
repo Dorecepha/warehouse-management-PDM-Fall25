@@ -3,10 +3,67 @@ import { useNavigate } from 'react-router-dom';
 import { useTransactions } from '../features/transactions/api';
 import PaginationComponent from '../components/PaginationComponent';
 
+// --- Helper Components for Badges ---
+
+const ArrowDownRight = () => (
+  <svg
+    width="12"
+    height="12"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="3"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <line x1="7" y1="7" x2="17" y2="17"></line>
+    <polyline points="17 7 17 17 7 17"></polyline>
+  </svg>
+);
+
+const ArrowUpRight = () => (
+  <svg
+    width="12"
+    height="12"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="3"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <line x1="7" y1="17" x2="17" y2="7"></line>
+    <polyline points="7 7 17 7 17 17"></polyline>
+  </svg>
+);
+
+const TypeBadge = ({ type }) => {
+  if (type === 'PURCHASE') {
+    return (
+      <span className="inline-flex items-center gap-1 rounded-full border-[3px] border-white bg-[#FF5252] px-3 py-1 text-xs font-bold text-white shadow-sm">
+        <ArrowDownRight />
+        PURCHASE
+      </span>
+    );
+  }
+  if (type === 'SALE') {
+    return (
+      <span className="inline-flex items-center gap-1 rounded-full border-[3px] border-white bg-black px-3 py-1 text-xs font-bold text-white shadow-sm">
+        <ArrowUpRight />
+        SALE
+      </span>
+    );
+  }
+  return <span className="text-sm text-slate-600">{type}</span>;
+};
+
+// --- Main Page Component ---
+
 function TransactionsPage() {
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState('');
   const [searchInput, setSearchInput] = useState('');
+  const [filterType, setFilterType] = useState('ALL'); // 'ALL', 'PURCHASE', 'SALE'
   const navigate = useNavigate();
 
   const { data, isLoading, isError, error, isFetching } = useTransactions({
@@ -21,122 +78,152 @@ function TransactionsPage() {
     setSearch(searchInput.trim());
   };
 
-  const columns = useMemo(
-    () => [
-      { key: 'transactionType', header: 'Type' },
-      { key: 'status', header: 'Status' },
-      { key: 'totalPrice', header: 'Total Price' },
-      { key: 'totalProducts', header: 'Total Products' },
-      { key: 'createdAt', header: 'Date' },
-      { key: 'actions', header: 'Actions' },
-    ],
-    []
-  );
+  // Filter logic (Client-side filtering for now)
+  const allTransactions = data?.transactions ?? [];
+  const displayedTransactions = useMemo(() => {
+    if (filterType === 'ALL') return allTransactions;
+    return allTransactions.filter((tx) => tx.transactionType === filterType);
+  }, [allTransactions, filterType]);
 
-  const transactions = data?.transactions ?? [];
   const totalPages = data?.meta?.totalPages ?? 1;
 
-  const getStatusClass = (status) => {
-    switch (status) {
-      case 'COMPLETED':
-        return 'bg-green-100 text-green-800';
-      case 'PENDING':
-        return 'bg-yellow-100 text-yellow-800';
-      case 'CANCELLED':
-        return 'bg-red-100 text-red-800';
-      case 'PROCESSING':
-        return 'bg-blue-100 text-blue-800';
-      default:
-        return 'bg-slate-100 text-slate-800';
-    }
-  };
-
   return (
-    <div className="space-y-6">
-      <header className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <h1 className="text-2xl font-semibold text-slate-900">
-            Transactions
-          </h1>
-          <p className="text-sm text-slate-500">
-            View all purchases, sales, and returns.
-          </p>
-        </div>
-        <form
-          onSubmit={handleSearchSubmit}
-          className="flex w-full max-w-sm gap-2"
-        >
+    <div className="min-h-[600px] rounded-[32px] border border-slate-200 bg-white p-8 shadow-sm">
+      {/* 1. Header Section */}
+      <header className="mb-8">
+        <h1 className="text-2xl font-semibold text-slate-900">Transaction</h1>
+        <p className="text-sm text-slate-500">
+          View all purchase and sale transactions
+        </p>
+      </header>
+
+      {/* 2. Search Bar & Filters */}
+      <div className="mb-6 space-y-4">
+        {/* Search */}
+        <form onSubmit={handleSearchSubmit} className="relative w-full">
+          <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+            <svg
+              className="h-5 w-5 text-slate-400"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+              />
+            </svg>
+          </div>
           <input
             value={searchInput}
             onChange={(e) => setSearchInput(e.target.value)}
-            placeholder="Search by type, status..."
-            className="flex-1 rounded-md border border-slate-300 bg-white px-3 py-2 text-sm shadow-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
+            placeholder="Search by reference, party, or product..."
+            className="w-full rounded-xl border-transparent bg-slate-100 py-3 pl-10 pr-4 text-sm text-slate-900 placeholder-slate-400 focus:border-primary focus:bg-white focus:ring-2 focus:ring-primary/20"
           />
-          <button
-            type="submit"
-            className="rounded-md bg-white px-4 py-2 text-sm font-medium text-slate-700 shadow-sm ring-1 ring-slate-200 hover:bg-slate-50"
-          >
-            Search
-          </button>
         </form>
-      </header>
 
+        {/* Filter Tabs */}
+        <div className="flex w-fit items-center rounded-full border border-slate-200 bg-slate-100 p-1">
+          <button
+            onClick={() => setFilterType('ALL')}
+            className={`rounded-full px-4 py-1.5 text-sm font-medium transition-all ${
+              filterType === 'ALL'
+                ? 'bg-white text-slate-900 shadow-sm'
+                : 'text-slate-500 hover:text-slate-700'
+            }`}
+          >
+            All Transactions
+          </button>
+          <button
+            onClick={() => setFilterType('PURCHASE')}
+            className={`rounded-full px-4 py-1.5 text-sm font-medium transition-all ${
+              filterType === 'PURCHASE'
+                ? 'bg-white text-slate-900 shadow-sm'
+                : 'text-slate-500 hover:text-slate-700'
+            }`}
+          >
+            Purchases
+          </button>
+          <button
+            onClick={() => setFilterType('SALE')}
+            className={`rounded-full px-4 py-1.5 text-sm font-medium transition-all ${
+              filterType === 'SALE'
+                ? 'bg-white text-slate-900 shadow-sm'
+                : 'text-slate-500 hover:text-slate-700'
+            }`}
+          >
+            Sales
+          </button>
+        </div>
+      </div>
+
+      {/* 3. Table Section */}
       {isLoading ? (
-        <div className="rounded-lg border border-dashed border-slate-300 bg-white p-10 text-center text-slate-600">
+        <div className="py-20 text-center text-slate-500">
           Loading transactions...
         </div>
       ) : isError ? (
-        <div className="rounded-lg border border-red-200 bg-red-50 p-6 text-red-700">
-          {error.message}
-        </div>
-      ) : transactions.length === 0 ? (
-        <div className="rounded-lg border border-dashed border-slate-300 bg-white p-10 text-center text-slate-500">
+        <div className="py-10 text-center text-red-500">{error.message}</div>
+      ) : displayedTransactions.length === 0 ? (
+        <div className="py-20 text-center text-slate-500">
           No transactions found.
         </div>
       ) : (
-        <div className="overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm">
+        <div className="overflow-hidden rounded-xl border border-slate-200">
           <table className="min-w-full divide-y divide-slate-200">
-            <thead className="bg-slate-50">
+            <thead>
               <tr>
-                {columns.map((column) => (
-                  <th
-                    key={column.key}
-                    scope="col"
-                    className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wide text-slate-600"
-                  >
-                    {column.header}
-                  </th>
-                ))}
+                <th className="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-slate-900">
+                  Date
+                </th>
+                <th className="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-slate-900">
+                  Type
+                </th>
+                <th className="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-slate-900">
+                  Status
+                </th>
+                <th className="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-slate-900">
+                  Total Products
+                </th>
+                <th className="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-slate-900">
+                  Total Price
+                </th>
+                <th className="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-slate-900">
+                  Product
+                </th>
+                <th className="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-slate-900">
+                  Actions
+                </th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-200">
-              {transactions.map((tx) => (
+            <tbody className="divide-y divide-slate-200 bg-white">
+              {displayedTransactions.map((tx) => (
                 <tr key={tx.id} className="hover:bg-slate-50">
-                  <td className="px-4 py-3 text-sm font-medium text-slate-900">
-                    {tx.transactionType}
+                  <td className="whitespace-nowrap px-6 py-4 text-sm text-slate-900">
+                    {new Date(tx.createdAt).toLocaleDateString('en-CA')}
                   </td>
-                  <td className="px-4 py-3 text-sm">
-                    <span
-                      className={`inline-flex rounded-full px-2 text-xs font-semibold leading-5 ${getStatusClass(
-                        tx.status
-                      )}`}
-                    >
-                      {tx.status}
-                    </span>
+                  <td className="whitespace-nowrap px-6 py-4">
+                    <TypeBadge type={tx.transactionType} />
                   </td>
-                  <td className="px-4 py-3 text-sm text-slate-700">
-                    ${tx.totalPrice?.toFixed(2)}
+                  <td className="whitespace-nowrap px-6 py-4 text-sm text-slate-700">
+                    {tx.status.charAt(0).toUpperCase() +
+                      tx.status.slice(1).toLowerCase()}
                   </td>
-                  <td className="px-4 py-3 text-sm text-slate-700">
+                  <td className="whitespace-nowrap px-6 py-4 text-sm text-slate-700">
                     {tx.totalProducts}
                   </td>
-                  <td className="px-4 py-3 text-sm text-slate-700">
-                    {new Date(tx.createdAt).toLocaleString()}
+                  <td className="whitespace-nowrap px-6 py-4 text-sm text-slate-700">
+                    {tx.totalPrice}
                   </td>
-                  <td className="px-4 py-3 text-sm">
+                  <td className="whitespace-nowrap px-6 py-4 text-sm text-slate-700">
+                    {tx.product?.name || 'Unknown Product'}
+                  </td>
+                  <td className="whitespace-nowrap px-6 py-4 text-sm">
                     <button
                       onClick={() => navigate(`/transactions/${tx.id}`)}
-                      className="font-medium text-primary hover:text-primary/80"
+                      className="font-medium text-primary hover:text-blue-700"
                     >
                       View Details
                     </button>
@@ -147,19 +234,14 @@ function TransactionsPage() {
           </table>
         </div>
       )}
-
       {totalPages > 1 && (
-        <footer className="flex flex-col items-center justify-between gap-3 sm:flex-row">
-          <p className="text-sm text-slate-500">
-            Page {page} of {totalPages}{' '}
-            {isFetching && !isLoading ? '· Updating…' : ''}
-          </p>
+        <div className="mt-6 flex justify-center">
           <PaginationComponent
             currentPage={page}
             totalPages={totalPages}
             onPageChange={setPage}
           />
-        </footer>
+        </div>
       )}
     </div>
   );

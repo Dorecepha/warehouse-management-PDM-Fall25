@@ -6,18 +6,16 @@ import {
 } from '../features/transactions/api';
 
 const DetailCard = ({ title, children }) => (
-  <div className="overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm">
-    <div className="border-b border-slate-200 bg-slate-50 px-4 py-3">
-      <h2 className="text-lg font-semibold text-slate-900">{title}</h2>
-    </div>
-    <div className="space-y-3 p-4">{children}</div>
+  <div className="h-full rounded-xl border border-slate-400 bg-white p-5">
+    <h3 className="mb-4 text-lg font-bold text-slate-900">{title}</h3>
+    <div className="space-y-3 text-sm">{children}</div>
   </div>
 );
 
 const DetailRow = ({ label, value }) => (
   <div className="flex justify-between">
-    <span className="text-sm font-medium text-slate-500">{label}</span>
-    <span className="text-sm font-semibold text-slate-900">{value}</span>
+    <span className="text-slate-500">{label}</span>
+    <span className="font-semibold text-slate-900">{value}</span>
   </div>
 );
 
@@ -39,7 +37,7 @@ function TransactionDetailsPage() {
   const handleUpdateStatus = () => {
     setServerError('');
     updateMutation.mutate(
-      { id, data: { status } },
+      { id, status: { status } },
       {
         onSuccess: () => {
           navigate('/transactions');
@@ -53,42 +51,34 @@ function TransactionDetailsPage() {
 
   if (isLoading) {
     return (
-      <div className="rounded-lg border border-dashed border-slate-300 bg-white p-10 text-center text-slate-600">
+      <div className="py-20 text-center text-slate-500">
         Loading transaction...
       </div>
     );
   }
 
-  if (isError) {
+  if (isError || !data?.transaction) {
     return (
-      <div className="rounded-lg border border-red-200 bg-red-50 p-6 text-red-700">
-        {error.message}
+      <div className="py-20 text-center text-red-500">
+        {error?.message || 'Transaction not found.'}
       </div>
     );
   }
 
-  const tx = data?.transaction;
-
-  if (!tx) {
-    return (
-      <div className="rounded-lg border border-dashed border-slate-300 bg-white p-10 text-center text-slate-600">
-        Transaction not found.
-      </div>
-    );
-  }
+  const tx = data.transaction;
 
   return (
-    <div className="space-y-6">
-      <header className="space-y-1">
+    <div className="min-h-[600px] rounded-[32px] border border-slate-200 bg-white p-8 shadow-sm">
+      <div className="mb-8">
         <h1 className="text-2xl font-semibold text-slate-900">
           Transaction Details
         </h1>
         <p className="text-sm text-slate-500">
           ID: {tx.id} ({tx.transactionType})
         </p>
-      </header>
+      </div>
 
-      <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
         <DetailCard title="Transaction Information">
           <DetailRow label="Type" value={tx.transactionType} />
           <DetailRow label="Status" value={tx.status} />
@@ -99,65 +89,85 @@ function TransactionDetailsPage() {
           />
           <DetailRow
             label="Created At"
-            value={new Date(tx.createdAt).toLocaleString()}
+            value={new Date(tx.createdAt).toLocaleDateString()}
           />
-          {tx.updatedAt && (
-            <DetailRow
-              label="Updated At"
-              value={new Date(tx.updatedAt).toLocaleString()}
-            />
-          )}
           <DetailRow label="Description" value={tx.description || 'N/A'} />
           <DetailRow label="Note" value={tx.note || 'N/A'} />
         </DetailCard>
 
         <DetailCard title="Product Information">
-          <DetailRow label="Name" value={tx.product.name} />
-          <DetailRow label="SKU" value={tx.product.sku} />
-          <DetailRow label="Price" value={`$${tx.product.price?.toFixed(2)}`} />
+          <DetailRow label="Name" value={tx.product?.name || 'Unknown'} />
+          <DetailRow label="SKU" value={tx.product?.sku || 'N/A'} />
+          <DetailRow
+            label="Price"
+            value={tx.product?.price ? `$${tx.product.price}` : 'N/A'}
+          />
         </DetailCard>
 
         <DetailCard title="User Information">
-          <DetailRow label="Name" value={tx.user.name} />
-          <DetailRow label="Email" value={tx.user.email} />
-          <DetailRow label="Phone" value={tx.user.phoneNumber} />
-          <DetailRow label="Role" value={tx.user.role} />
+          <DetailRow label="Name" value={tx.user?.name || 'Unknown'} />
+          <DetailRow label="Email" value={tx.user?.email || 'N/A'} />
+          <DetailRow label="Phone" value={tx.user?.phoneNumber || 'N/A'} />
+          <DetailRow label="Role" value={tx.user?.role || 'N/A'} />
         </DetailCard>
 
-        {tx.supplier && (
+        {tx.supplier ? (
           <DetailCard title="Supplier Information">
             <DetailRow label="Name" value={tx.supplier.name} />
             <DetailRow label="Contact" value={tx.supplier.contactInfo} />
             <DetailRow label="Address" value={tx.supplier.address} />
           </DetailCard>
+        ) : (
+          <div className="hidden lg:block"></div>
         )}
 
-        <div className="space-y-4 rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
-          <label
-            htmlFor="status"
-            className="block text-sm font-medium text-slate-700"
-          >
+        <div className="rounded-xl border border-slate-400 bg-white p-5">
+          <h3 className="mb-4 text-lg font-bold text-slate-900">
             Update Status
-          </label>
-          <select
-            id="status"
-            value={status}
-            onChange={(e) => setStatus(e.target.value)}
-            className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm shadow-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
-          >
-            <option value="PENDING">PENDING</option>
-            <option value="PROCESSING">PROCESSING</option>
-            <option value="COMPLETED">COMPLETED</option>
-            <option value="CANCELLED">CANCELLED</option>
-          </select>
+          </h3>
+          <div className="space-y-3">
+            <select
+              value={status}
+              onChange={(e) => setStatus(e.target.value)}
+              className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-[#3E3998] focus:ring-1 focus:ring-[#3E3998]"
+            >
+              <option value="PENDING">Pending</option>
+              <option value="PROCESSING">Processing</option>
+              <option value="COMPLETED">Completed</option>
+              <option value="CANCELLED">Cancelled</option>
+            </select>
+            <button
+              onClick={handleUpdateStatus}
+              disabled={updateMutation.isPending}
+              className="w-full rounded-lg bg-[#3E3998] py-2 text-sm font-semibold text-white hover:opacity-90 disabled:opacity-60"
+            >
+              {updateMutation.isPending ? 'Updating...' : 'Update Status'}
+            </button>
+            {serverError && (
+              <p className="text-xs text-red-600">{serverError}</p>
+            )}
+          </div>
+        </div>
+
+        <div className="flex items-end justify-end">
           <button
-            onClick={handleUpdateStatus}
-            disabled={updateMutation.isPending}
-            className="inline-flex w-full justify-center rounded-md bg-primary px-4 py-2 text-sm font-semibold text-white shadow-sm transition focus:outline-none focus:ring-2 focus:ring-primary/20 disabled:cursor-not-allowed disabled:opacity-60"
+            onClick={() => navigate(-1)} 
+            className="flex items-center gap-2 rounded-lg bg-[#3E3998] px-6 py-3 text-sm font-bold text-white hover:opacity-90"
           >
-            {updateMutation.isPending ? 'Updating…' : 'Update Status'}
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M19 12H5M12 19l-7-7 7-7" />
+            </svg>
+            GO BACK
           </button>
-          {serverError && <p className="text-sm text-red-600">{serverError}</p>}
         </div>
       </div>
     </div>

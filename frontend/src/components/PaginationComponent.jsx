@@ -4,9 +4,9 @@ function PaginationComponent({ currentPage, totalPages, onPageChange }) {
   const pageNumbers = Array.from({ length: totalPages }, (_, i) => i + 1);
 
   const baseButtonClass =
-    'rounded-md border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-600 shadow-sm disabled:cursor-not-allowed disabled:opacity-60';
+    'rounded-md border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-[#776B6B] shadow-sm disabled:cursor-not-allowed disabled:opacity-60 hover:bg-slate-50';
   const activeButtonClass =
-    'rounded-md border border-primary bg-primary px-3 py-2 text-sm font-medium text-white shadow-sm';
+    'rounded-md border border-[#776B6B] bg-[#776B6B] px-3 py-2 text-sm font-medium text-white shadow-sm';
 
   return (
     <div className="flex items-center gap-2">

@@ -49,6 +49,10 @@ public class TransactionServiceImpl implements TransactionService {
 
             Supplier supplier = supplierRepository.findById(supplierId)
                     .orElseThrow(() -> new NotFoundException("Supplier Not Found"));
+            
+            if (product.getStockQuantity() < quantity) {
+                        throw new IllegalArgumentException("Insufficient stock. Available: " + product.getStockQuantity());
+            }
 
             User user = userService.getCurrentLoggedInUser();
 

@@ -43,15 +43,6 @@ function PurchasePage() {
 
   return (
     <div className="space-y-6">
-      <header className="space-y-1">
-        <h1 className="text-2xl font-semibold text-slate-900">
-          Create New Purchase
-        </h1>
-        <p className="text-sm text-slate-500">
-          Add new stock to your inventory by recording a purchase.
-        </p>
-      </header>
-
       {isLoading ? (
         <div className="rounded-lg border border-dashed border-slate-300 bg-white p-10 text-center text-slate-600">
           Loading products and suppliers...
