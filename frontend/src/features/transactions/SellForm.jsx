@@ -5,7 +5,6 @@ import { sellSchema, sellFormDefaultValues } from './sellSchema';
 
 function SellForm({
   defaultValues = sellFormDefaultValues,
-  submitLabel = 'Create Sale',
   onSubmit = () => {},
   isSubmitting: isSubmittingProp = false,
   serverError,
@@ -15,6 +14,8 @@ function SellForm({
     register,
     handleSubmit,
     reset,
+    setError,
+    clearErrors,
     formState: { errors, isSubmitting },
   } = useForm({
     resolver: zodResolver(sellSchema),
@@ -27,30 +28,57 @@ function SellForm({
 
   const submitting = isSubmitting || isSubmittingProp;
 
+  const onFormSubmit = (formData) => {
+    const selectedProduct = products.find((p) => p.id === formData.productId);
+
+    if (!selectedProduct) {
+      setError('productId', { message: 'Product not found' });
+      return;
+    }
+
+    if (formData.quantity > selectedProduct.stockQuantity) {
+      setError('quantity', {
+        type: 'manual',
+        message: `Not enough stock! Only ${selectedProduct.stockQuantity} available.`,
+      });
+      return;
+    }
+
+    clearErrors('quantity');
+    onSubmit(formData);
+  };
+
   return (
     <form
-      onSubmit={handleSubmit(onSubmit)}
-      className="space-y-6 rounded-lg border border-slate-200 bg-white p-6 shadow-sm"
+      onSubmit={handleSubmit(onFormSubmit)}
+      className="mx-auto max-w-[867px] min-h-[500px] rounded-[32px] border border-slate-200 bg-white p-10 shadow-sm"
       noValidate
     >
-      <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-        <div className="space-y-2 md:col-span-2">
+      <header className="mb-10">
+        <h1 className="text-2xl font-semibold text-slate-900">Sell Product</h1>
+        <p className="mt-2 text-sm text-slate-500">
+          Fill in the form to record a sale and remove stock.
+        </p>
+      </header>
+
+      <div className="space-y-6">
+        <div className="space-y-2">
           <label
             htmlFor="productId"
-            className="block text-sm font-medium text-slate-700"
+            className="block text-sm font-medium text-slate-900"
           >
-            Product
+            Select Product
           </label>
           <select
             id="productId"
-            className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm shadow-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
+            className="w-full rounded-lg border-transparent bg-slate-100 px-4 py-3 text-sm focus:border-[#3E3998] focus:bg-white focus:ring-2 focus:ring-[#3E3998]/20"
             {...register('productId', { valueAsNumber: true })}
             aria-invalid={errors.productId ? 'true' : 'false'}
           >
             <option value={0}>Select a product</option>
             {products.map((product) => (
               <option key={product.id} value={product.id}>
-                {product.name} (Available Qty: {product.stockQuantity})
+                {product.name} (Qty: {product.stockQuantity})
               </option>
             ))}
           </select>
@@ -61,12 +89,12 @@ function SellForm({
           ) : null}
         </div>
 
-        <div className="space-y-2 md:col-span-2">
+        <div className="space-y-2">
           <label
             htmlFor="quantity"
-            className="block text-sm font-medium text-slate-700"
+            className="block text-sm font-medium text-slate-900"
           >
-            Quantity to Sell
+            Quantity
           </label>
           <input
             id="quantity"
@@ -74,7 +102,7 @@ function SellForm({
             inputMode="numeric"
             min="1"
             step="1"
-            className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm shadow-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
+            className="w-full rounded-lg border-transparent bg-slate-100 px-4 py-3 text-sm focus:border-[#3E3998] focus:bg-white focus:ring-2 focus:ring-[#3E3998]/20"
             {...register('quantity', { valueAsNumber: true })}
             aria-invalid={errors.quantity ? 'true' : 'false'}
           />
@@ -85,33 +113,33 @@ function SellForm({
           ) : null}
         </div>
 
-        <div className="space-y-2 md:col-span-2">
+        <div className="space-y-2">
           <label
             htmlFor="description"
-            className="block text-sm font-medium text-slate-700"
+            className="block text-sm font-medium text-slate-900"
           >
-            Description (Optional)
+            Description
           </label>
           <textarea
             id="description"
             rows={2}
-            className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm shadow-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
+            className="w-full rounded-lg border-transparent bg-slate-100 px-4 py-3 text-sm focus:border-[#3E3998] focus:bg-white focus:ring-2 focus:ring-[#3E3998]/20"
             {...register('description')}
             aria-invalid={errors.description ? 'true' : 'false'}
           />
         </div>
 
-        <div className="space-y-2 md:col-span-2">
+        <div className="space-y-2">
           <label
             htmlFor="note"
-            className="block text-sm font-medium text-slate-700"
+            className="block text-sm font-medium text-slate-900"
           >
-            Note (Optional)
+            Note
           </label>
           <textarea
             id="note"
             rows={2}
-            className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm shadow-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
+            className="w-full rounded-lg border-transparent bg-slate-100 px-4 py-3 text-sm focus:border-[#3E3998] focus:bg-white focus:ring-2 focus:ring-[#3E3998]/20"
             {...register('note')}
             aria-invalid={errors.note ? 'true' : 'false'}
           />
@@ -119,18 +147,18 @@ function SellForm({
       </div>
 
       {serverError ? (
-        <div className="rounded-md border border-red-200 bg-red-50 p-3 text-sm text-red-700">
+        <div className="mt-6 rounded-md border border-red-200 bg-red-50 p-3 text-sm text-red-700">
           {serverError}
         </div>
       ) : null}
 
-      <div className="flex justify-end gap-3">
+      <div className="mt-8">
         <button
           type="submit"
-          className="inline-flex items-center rounded-md bg-primary px-4 py-2 text-sm font-semibold text-white shadow-sm transition focus:outline-none focus:ring-2 focus:ring-primary/20 disabled:cursor-not-allowed disabled:opacity-60"
+          className="w-full rounded-lg bg-[#3E3998] py-3 text-sm font-semibold text-white transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
           disabled={submitting}
         >
-          {submitting ? 'Creating Sale…' : submitLabel}
+          {submitting ? 'Selling...' : 'Sell Product'}
         </button>
       </div>
     </form>

@@ -7,7 +7,7 @@ export function useTransactions({ page = 1, limit = 10, search = '' } = {}) {
   return useQuery({
     queryKey: [...TRANSACTIONS_QUERY_KEY, { page, limit, search }],
     queryFn: async () => {
-      const response = await api.get('/transactions', {
+      const response = await api.get('/transactions/all', {
         params: {
           page,
           limit,
@@ -62,8 +62,8 @@ export function useUpdateTransaction() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({ id, data }) => {
-      const response = await api.put(`/transactions/${id}`, data);
+    mutationFn: async ({ id, status }) => {
+      const response = await api.put(`/transactions/${id}`, status);
       return response.data;
     },
     onSuccess: (data, variables) => {

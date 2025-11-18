@@ -31,10 +31,44 @@ function PurchaseForm({
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="space-y-6 rounded-lg border border-slate-200 bg-white p-6 shadow-sm"
+      className="mx-auto max-w-[867px] min-h-[500px] rounded-[32px] border border-slate-200 bg-white p-10 shadow-sm"
       noValidate
     >
+      <h1 className="text-2xl font-semibold text-slate-900 mb-1">
+        Receive Inventory
+      </h1>
+      <p className="text-sm text-slate-500 mb-6">
+        Add new stock into the inventory and record this transaction.
+      </p>
+
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+        <div className="space-y- md:col-span-2">
+          <label
+            htmlFor="supplierId"
+            className="block text-sm font-medium text-slate-700"
+          >
+            Supplier
+          </label>
+          <select
+            id="supplierId"
+            className="w-full rounded-lg bg-slate-100 border-transparent px-4 py-3 text-sm focus:bg-white focus:border-[#3E3998] focus:ring-2 focus:ring-[#3E3998]/20"
+            {...register('supplierId', { valueAsNumber: true })}
+            aria-invalid={errors.supplierId ? 'true' : 'false'}
+          >
+            <option value={0}>Select a supplier</option>
+            {suppliers.map((supplier) => (
+              <option key={supplier.id} value={supplier.id}>
+                {supplier.name}
+              </option>
+            ))}
+          </select>
+          {errors.supplierId ? (
+            <p className="text-sm text-red-600" role="alert">
+              {errors.supplierId.message}
+            </p>
+          ) : null}
+        </div>
+
         <div className="space-y-2">
           <label
             htmlFor="productId"
@@ -44,7 +78,7 @@ function PurchaseForm({
           </label>
           <select
             id="productId"
-            className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm shadow-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
+            className="w-full rounded-lg bg-slate-100 border-transparent px-4 py-3 text-sm focus:bg-white focus:border-[#3E3998] focus:ring-2 focus:ring-[#3E3998]/20"
             {...register('productId', { valueAsNumber: true })}
             aria-invalid={errors.productId ? 'true' : 'false'}
           >
@@ -64,33 +98,6 @@ function PurchaseForm({
 
         <div className="space-y-2">
           <label
-            htmlFor="supplierId"
-            className="block text-sm font-medium text-slate-700"
-          >
-            Supplier
-          </label>
-          <select
-            id="supplierId"
-            className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm shadow-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
-            {...register('supplierId', { valueAsNumber: true })}
-            aria-invalid={errors.supplierId ? 'true' : 'false'}
-          >
-            <option value={0}>Select a supplier</option>
-            {suppliers.map((supplier) => (
-              <option key={supplier.id} value={supplier.id}>
-                {supplier.name}
-              </option>
-            ))}
-          </select>
-          {errors.supplierId ? (
-            <p className="text-sm text-red-600" role="alert">
-              {errors.supplierId.message}
-            </p>
-          ) : null}
-        </div>
-
-        <div className="space-y-2 md:col-span-2">
-          <label
             htmlFor="quantity"
             className="block text-sm font-medium text-slate-700"
           >
@@ -102,7 +109,7 @@ function PurchaseForm({
             inputMode="numeric"
             min="1"
             step="1"
-            className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm shadow-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
+            className="w-full rounded-lg bg-slate-100 border-transparent px-4 py-3 text-sm focus:bg-white focus:border-[#3E3998] focus:ring-2 focus:ring-[#3E3998]/20"
             {...register('quantity', { valueAsNumber: true })}
             aria-invalid={errors.quantity ? 'true' : 'false'}
           />
@@ -123,7 +130,7 @@ function PurchaseForm({
           <textarea
             id="description"
             rows={2}
-            className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm shadow-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
+            className="w-full rounded-lg bg-slate-100 border-transparent px-4 py-3 text-sm focus:bg-white focus:border-[#3E3998] focus:ring-2 focus:ring-[#3E3998]/20"
             {...register('description')}
             aria-invalid={errors.description ? 'true' : 'false'}
           />
@@ -139,7 +146,7 @@ function PurchaseForm({
           <textarea
             id="note"
             rows={2}
-            className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm shadow-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
+            className="w-full rounded-lg bg-slate-100 border-transparent px-4 py-3 text-sm focus:bg-white focus:border-[#3E3998] focus:ring-2 focus:ring-[#3E3998]/20"
             {...register('note')}
             aria-invalid={errors.note ? 'true' : 'false'}
           />
@@ -152,13 +159,13 @@ function PurchaseForm({
         </div>
       ) : null}
 
-      <div className="flex justify-end gap-3">
+      <div className="mt-8">
         <button
           type="submit"
-          className="inline-flex items-center rounded-md bg-primary px-4 py-2 text-sm font-semibold text-white shadow-sm transition focus:outline-none focus:ring-2 focus:ring-primary/20 disabled:cursor-not-allowed disabled:opacity-60"
+          className="w-full rounded-lg bg-[#3E3998] py-3 text-sm font-semibold text-white hover:opacity-90 transition-opacity disabled:cursor-not-allowed disabled:opacity-60"
           disabled={submitting}
         >
-          {submitting ? 'Creating Purchase…' : submitLabel}
+          {submitting ? 'Creating Purchase…' : 'Purchase Product'}
         </button>
       </div>
     </form>
