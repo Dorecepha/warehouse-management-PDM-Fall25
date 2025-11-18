@@ -20,17 +20,17 @@ const isAdmin = () => {
 };
 
 function ProtectedRoute({ children }) {
-  const location = useLocation();
+  /*const location = useLocation();
 
   if (!isAuthenticated()) {
     return <Navigate to="/login" replace state={{ from: location }} />;
-  }
+  }*/
 
   return children;
 }
 
 export function AdminRoute({ children }) {
-  const location = useLocation();
+  /*const location = useLocation();
 
   if (!isAuthenticated()) {
     return <Navigate to="/login" replace state={{ from: location }} />;
@@ -39,7 +39,7 @@ export function AdminRoute({ children }) {
   if (!isAdmin()) {
     return <Navigate to="/login" replace state={{ from: location }} />;
   }
-
+*/
   return children;
 }
 

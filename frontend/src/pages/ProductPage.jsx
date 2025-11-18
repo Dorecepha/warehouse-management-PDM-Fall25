@@ -60,7 +60,7 @@ function ProductPage() {
             </button>
           </form>
           <button
-            onClick={() => navigate('/add-product')}
+            onClick={() => navigate('/products/new')}
             className="rounded-md bg-primary px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-primary/90"
           >
             Add Product
