@@ -31,25 +31,24 @@ function ProductForm({
 
   return (
     <form
-      onSubmit={handleSubmit(onSubmit)}
+      onSubmit={handleSubmit(onSubmit)} 
       className="space-y-6 rounded-lg border border-slate-200 bg-white p-6 shadow-sm"
       noValidate
     >
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
         <div className="space-y-2">
-          <label
-            htmlFor="name"
-            className="block text-sm font-medium text-slate-700"
-          >
+          <label style={{width: '100%', height: '100%', color: 'black', fontSize: 19, fontFamily: 'Inter', fontWeight: '400', wordWrap: 'break-word'}}>
             Product Name
           </label>
+          <div style ={{ width: '432px',height: '36px',background: '#F0F0F0',borderRadius: '10px',padding: '0 12px',display: 'flex',alignItems: 'center'}}>
           <input
             id="name"
             type="text"
-            className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm shadow-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
+            style={{width: '100%', height: '60%', background: '#F0F0F0', borderRadius: 10, padding : '0rem 0.5rem'}}
             {...register('name')}
             aria-invalid={errors.name ? 'true' : 'false'}
           />
+          </div>
           {errors.name ? (
             <p className="text-sm text-red-600" role="alert">
               {errors.name.message}
