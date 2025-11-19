@@ -98,29 +98,23 @@ function ProductEditPage() {
     );
   }
 
-  return (
-    <div className="space-y-6">
-      <header className="space-y-1">
-        <h1 className="text-2xl font-semibold text-slate-900">
-          Edit Product: {productData.product.name}
-        </h1>
-        <p className="text-sm text-slate-500">
-          Update the product details and save your changes.
-        </p>
-      </header>
-
+return (
+  <div className="w-full min-h-full flex items-center justify-center">
+    <div className="w-full max-w-[1500px] px-10">
       <ProductForm
-        defaultValues={defaultValues}
+        defaultValues={productFormDefaultValues}
         submitLabel="Update Product"
         onSubmit={handleSubmit}
+        mode="edit"
         isSubmitting={isPending}
-        serverError={serverError || updateError?.message}
+        serverError={serverError}
         categories={categories}
         onImageChange={handleImageChange}
         imageUrl={imageUrl}
       />
     </div>
-  );
+  </div>
+);
 }
 
 export default ProductEditPage;

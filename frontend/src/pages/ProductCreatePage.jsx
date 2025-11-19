@@ -45,29 +45,23 @@ function ProductCreatePage() {
     });
   };
 
-  return (
-    <div className="space-y-6">
-      <header className="space-y-1">
-        <h1 className="text-2xl font-semibold text-slate-900">
-          Create New Product
-        </h1>
-        <p className="text-sm text-slate-500">
-          Fill out the form below to add a new product to the inventory.
-        </p>
-      </header>
-
+return (
+  <div className="w-full min-h-full flex items-center justify-center">
+    <div className="w-full max-w-[1500px] px-10">
       <ProductForm
         defaultValues={productFormDefaultValues}
         submitLabel="Create Product"
         onSubmit={handleSubmit}
+        mode="create"
         isSubmitting={isPending}
-        serverError={serverError || error?.message}
+        serverError={serverError}
         categories={categories}
         onImageChange={handleImageChange}
         imageUrl={imageUrl}
       />
     </div>
-  );
+  </div>
+);
 }
 
 export default ProductCreatePage;
