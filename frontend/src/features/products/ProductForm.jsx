@@ -38,10 +38,10 @@ function ProductForm({
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
         <div className="space-y-4 md:col-span-1">
           <div className="space-y-2">
-            <label htmlFor="name" className="block text-sm font-medium text-slate-700">
+            <label htmlFor="name" className="block text-[19px] font-inter font-normal text-slate-700">
               Product Name
             </label>
-            <div className="bg-gray-100 rounded-md px-3 py-2">
+            <div className="bg-gray-100 rounded-md px-3 py-2 hover:bg-gray-200 transition duration-300">
               <input
                 id="name"
                 type="text"
@@ -58,34 +58,55 @@ function ProductForm({
           </div>
 
           <div className="space-y-2">
-            <label htmlFor="sku" className="block text-sm font-medium text-slate-700">
+            <label htmlFor="sku" className="block text-[19px] font-inter font-normal text-slate-700">
               SKU
             </label>
+            <div className="bg-gray-100 rounded-md px-3 py-2 hover:bg-gray-200 transition duration-300">
             <input
               id="sku"
               type="text"
-              className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm shadow-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
+              className="w-full bg-transparent outline-none"
               {...register('sku')}
               aria-invalid={errors.sku ? 'true' : 'false'}
             />
+            </div>
             {errors.sku ? (
               <p className="text-sm text-red-600" role="alert">
                 {errors.sku.message}
               </p>
             ) : null}
           </div>
-
           <div className="space-y-2">
-            <label htmlFor="price" className="block text-sm font-medium text-slate-700">
+            <label htmlFor="description" className="block text-[19px] font-normal font-inter text-slate-700">
+              Description
+            </label>
+            <div className="bg-gray-100 rounded-md px-3 py-2 hover:bg-gray-200 transition duration-300">
+            <textarea
+              id="description"
+              rows={3}
+              className="w-full bg-transparent outline-none"
+              {...register('description')}
+              aria-invalid={errors.description ? 'true' : 'false'}
+            />
+            </div>
+            {errors.description ? (
+              <p className="text-sm text-red-600" role="alert">
+                {errors.description.message}
+              </p>
+            ) : null}
+          </div>
+          <div className="space-y-2">
+            <label htmlFor="price" className="block text-[19px] font-normal font-inter text-slate-700">
               Price
             </label>
+            <div className="bg-gray-100 rounded-md px-3 py-2 hover:bg-gray-200 transition duration-300">
             <input
               id="price"
               type="number"
               inputMode="decimal"
               min="0"
               step="0.01"
-              className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm shadow-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
+              className="w-full bg-transparent outline-none"
               {...register('price', { valueAsNumber: true })}
               aria-invalid={errors.price ? 'true' : 'false'}
             />
@@ -94,19 +115,21 @@ function ProductForm({
                 {errors.price.message}
               </p>
             ) : null}
+            </div>
           </div>
 
           <div className="space-y-2">
-            <label htmlFor="stockQuantity" className="block text-sm font-medium text-slate-700">
+            <label htmlFor="stockQuantity" className="block text-[19px] font-inter font-normal text-slate-700">
               Stock Quantity
             </label>
+            <div className="bg-gray-100 rounded-md px-3 py-2 hover:bg-gray-200 transition duration-300">
             <input
               id="stockQuantity"
               type="number"
               inputMode="numeric"
               min="0"
               step="1"
-              className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm shadow-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
+              className="w-full bg-transparent outline-none "
               {...register('stockQuantity', { valueAsNumber: true })}
               aria-invalid={errors.stockQuantity ? 'true' : 'false'}
             />
@@ -116,14 +139,16 @@ function ProductForm({
               </p>
             ) : null}
           </div>
+          </div>
 
           <div className="space-y-2">
             <label htmlFor="categoryId" className="block text-sm font-medium text-slate-700">
               Category
             </label>
+            <div className="bg-gray-100 rounded-md px-3 py-2 hover:bg-gray-200 transition duration-300">
             <select
               id="categoryId"
-              className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm shadow-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
+              className="w-full bg-transparent outline-none"
               {...register('categoryId', { valueAsNumber: true })}
               aria-invalid={errors.categoryId ? 'true' : 'false'}
             >
@@ -140,28 +165,11 @@ function ProductForm({
               </p>
             ) : null}
           </div>
-
-          <div className="space-y-2">
-            <label htmlFor="description" className="block text-sm font-medium text-slate-700">
-              Description
-            </label>
-            <textarea
-              id="description"
-              rows={3}
-              className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm shadow-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
-              {...register('description')}
-              aria-invalid={errors.description ? 'true' : 'false'}
-            />
-            {errors.description ? (
-              <p className="text-sm text-red-600" role="alert">
-                {errors.description.message}
-              </p>
-            ) : null}
           </div>
         </div>
 
-<div className="space-y-4 md:col-span-1 md:flex md:flex-col md:items-center">
-  <div className="w-1/2 aspect-square flex items-center justify-center bg-gray-200 rounded-lg hover:bg-gray-300 transition duration-300 ease-in-out overflow-hidden">
+<div className="space-y-4 md:col-span-1 md:flex md:flex-col md:items-center md:mt-9">
+  <div className="w-2/3 aspect-square flex items-center justify-center bg-gray-200 rounded-[30px] hover:bg-gray-300 transition duration-300 ease-in-out overflow-hidden">
     {imageUrl ? (
       <img src={imageUrl} alt="Preview" className="w-full h-full object-cover object-center" />
     ) : (
