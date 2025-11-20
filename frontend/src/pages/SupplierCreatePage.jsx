@@ -22,19 +22,15 @@ function SupplierCreatePage() {
   };
 
   return (
-    <div className="space-y-6">
-      <header className="space-y-1">
-        <h1 className="text-2xl font-semibold text-slate-900">
-          Create New Supplier
-        </h1>
-        <p className="text-sm text-slate-500">
-          Fill out the form below to add a new supplier.
-        </p>
-      </header>
+    <div className="py-8 px-4 mx-auto max-w-5xl">
+      <div className="text-center mb-10">
+        <h1 className="text-3xl font-bold text-slate-900">Create New Supplier</h1>
+        <p className="text-slate-500 mt-2">Fill in the information below to add a new supplier</p>
+      </div>
 
       <SupplierForm
         defaultValues={supplierFormDefaultValues}
-        submitLabel="Create Supplier"
+        submitLabel="Add Supplier"
         onSubmit={handleSubmit}
         isSubmitting={isPending}
         serverError={serverError || error?.message}

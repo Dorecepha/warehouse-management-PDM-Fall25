@@ -41,8 +41,8 @@ function ProductForm({
       const db = descBoxRef.current;
       const rc = rightColRef.current;
       const pv = previewRef.current;
-      pv.style.marginBottom = '32px';
       if (!nb || !db || !rc || !pv) return;
+      pv.style.marginBottom = '32px';
 
       const isMd = window.matchMedia('(min-width: 768px)').matches;
       if (!isMd) {

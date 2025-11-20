@@ -67,82 +67,69 @@ function CategoryPage() {
   const totalPages = data?.meta?.totalPages ?? 1;
 
   return (
-    <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-      <div className="space-y-6 lg:col-span-1">
-        <header>
-          <h1 className="text-2xl font-semibold text-slate-900">
-            {editingCategory ? 'Edit Category' : 'Add New Category'}
-          </h1>
-          <p className="text-sm text-slate-500">
-            {editingCategory
-              ? `Updating "${editingCategory.name}"`
-              : 'Add a new category to the system.'}
+    <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 py-6">
+      
+      {/* Left Column: Form (Chiếm 4/12 phần trên desktop) */}
+      <div className="lg:col-span-4 space-y-6 order-2 lg:order-1">
+        <div>
+          <h2 className="text-xl font-bold text-slate-900 mb-1">
+            {editingCategory ? 'Edit Category' : 'Add Category'}
+          </h2>
+          <p className="text-sm text-slate-500 mb-4">
+            {editingCategory ? 'Update category details' : 'Create a new product category'}
           </p>
-        </header>
+          
+          <CategoryForm
+            key={editingCategory?.id ?? 'create'}
+            defaultValues={editingCategory ?? categoryFormDefaultValues}
+            submitLabel={editingCategory ? 'Update Category' : 'Add Category'}
+            onSubmit={editingCategory ? handleUpdate : handleCreate}
+            isSubmitting={createMutation.isPending || updateMutation.isPending}
+            serverError={serverError}
+          />
 
-        <CategoryForm
-          key={editingCategory?.id ?? 'create'}
-          defaultValues={editingCategory ?? categoryFormDefaultValues}
-          submitLabel={editingCategory ? 'Update Category' : 'Create Category'}
-          onSubmit={editingCategory ? handleUpdate : handleCreate}
-          isSubmitting={createMutation.isPending || updateMutation.isPending}
-          serverError={serverError}
-        />
-        {editingCategory && (
-          <button
-            type="button"
-            onClick={() => setEditingCategory(null)}
-            className="w-full rounded-md bg-white px-4 py-2 text-sm font-medium text-slate-700 shadow-sm ring-1 ring-slate-200 hover:bg-slate-50"
-          >
-            Cancel Edit
-          </button>
-        )}
+          {editingCategory && (
+            <button
+              type="button"
+              onClick={() => { setEditingCategory(null); setServerError(''); }}
+              className="w-full mt-3 px-4 py-2.5 rounded-lg bg-white border border-slate-300 text-slate-700 font-medium hover:bg-slate-50 transition-all"
+            >
+              Cancel Edit
+            </button>
+          )}
+        </div>
       </div>
 
-      <div className="space-y-6 lg:col-span-2">
-        <header>
-          <h1 className="text-2xl font-semibold text-slate-900">
-            Existing Categories
-          </h1>
-          <p className="text-sm text-slate-500">
-            Browse and manage all categories.
-          </p>
-        </header>
+      {/* Right Column: List (Chiếm 8/12 phần trên desktop) */}
+      <div className="lg:col-span-8 order-1 lg:order-2">
+        <div className="bg-white rounded-xl shadow-lg border border-slate-100 overflow-hidden">
+          <div className="p-6 border-b border-slate-100 bg-white">
+            <h2 className="text-xl font-bold text-slate-900">Categories</h2>
+            <p className="text-sm text-slate-500 mt-1">Organize your categories</p>
+          </div>
 
-        {isLoading ? (
-          <div className="rounded-lg border border-dashed border-slate-300 bg-white p-10 text-center text-slate-600">
-            Loading categories...
-          </div>
-        ) : isError ? (
-          <div className="rounded-lg border border-red-200 bg-red-50 p-6 text-red-700">
-            {error.message}
-          </div>
-        ) : categories.length === 0 ? (
-          <div className="rounded-lg border border-dashed border-slate-300 bg-white p-10 text-center text-slate-500">
-            No categories found.
-          </div>
-        ) : (
-          <div className="overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm">
-            <ul className="divide-y divide-slate-200">
+          {isLoading ? (
+             <div className="p-8 text-center text-slate-500">Loading...</div>
+          ) : isError ? (
+             <div className="p-6 text-red-600">{error.message}</div>
+          ) : categories.length === 0 ? (
+             <div className="p-8 text-center text-slate-500">No categories found.</div>
+          ) : (
+            <ul className="divide-y divide-slate-100">
               {categories.map((category) => (
-                <li
-                  key={category.id}
-                  className="flex items-center justify-between p-4"
-                >
-                  <span className="text-sm font-medium text-slate-900">
-                    {category.name}
-                  </span>
-                  <div className="flex gap-2">
-                    <button
+                <li key={category.id} className="p-4 flex items-center justify-between hover:bg-slate-50 transition-colors">
+                  <span className="font-medium text-slate-800 pl-2">{category.name}</span>
+                  <div className="flex items-center gap-3">
+                    <button 
                       onClick={() => setEditingCategory(category)}
-                      className="text-sm font-medium text-primary hover:text-primary/80"
+                      className="px-3 py-1.5 text-sm font-medium text-indigo-600 hover:text-indigo-800 bg-indigo-50 hover:bg-indigo-100 rounded-md transition-colors"
                     >
                       Edit
                     </button>
-                    <button
+                    <button 
                       onClick={() => handleDelete(category.id)}
                       disabled={deleteMutation.isPending}
-                      className="text-sm font-medium text-red-600 hover:text-red-600/80 disabled:opacity-50"
+                      className="px-3 py-1.5 text-sm font-medium text-red-600 hover:text-red-800 bg-red-50 hover:bg-red-100 rounded-md transition-colors disabled:opacity-50"
                     >
                       Delete
                     </button>
@@ -150,22 +137,14 @@ function CategoryPage() {
                 </li>
               ))}
             </ul>
-          </div>
-        )}
-
-        {totalPages > 1 && (
-          <footer className="flex items-center justify-between">
-            <p className="text-sm text-slate-500">
-              Page {page} of {totalPages}{' '}
-              {isFetching && !isLoading ? '· Updating…' : ''}
-            </p>
-            <PaginationComponent
-              currentPage={page}
-              totalPages={totalPages}
-              onPageChange={setPage}
-            />
-          </footer>
-        )}
+          )}
+          
+          {totalPages > 1 && (
+            <div className="p-4 border-t border-slate-100 flex justify-center">
+              <PaginationComponent currentPage={page} totalPages={totalPages} onPageChange={setPage} />
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

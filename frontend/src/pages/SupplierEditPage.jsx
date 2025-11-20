@@ -69,15 +69,11 @@ function SupplierEditPage() {
   }
 
   return (
-    <div className="space-y-6">
-      <header className="space-y-1">
-        <h1 className="text-2xl font-semibold text-slate-900">
-          Edit Supplier: {supplierData.supplier.name}
-        </h1>
-        <p className="text-sm text-slate-500">
-          Update the supplier details and save your changes.
-        </p>
-      </header>
+    <div className="py-8 px-4 mx-auto max-w-5xl">
+      <div className="text-center mb-10">
+        <h1 className="text-3xl font-bold text-slate-900">Edit Supplier</h1>
+        <p className="text-slate-500 mt-2">Update the information for {supplierData.supplier.name}</p>
+      </div>
 
       <SupplierForm
         defaultValues={defaultValues}
