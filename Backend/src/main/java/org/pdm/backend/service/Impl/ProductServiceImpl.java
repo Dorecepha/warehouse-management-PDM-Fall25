@@ -17,7 +17,8 @@ import org.springframework.stereotype.Repository;
 import org.springframework.web.multipart.MultipartFile;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-
+import java.nio.file.Paths;
+import java.nio.file.Path;
 
 import java.io.File;
 import java.math.BigDecimal;
@@ -31,7 +32,6 @@ public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
 
-    private static final String IMAGE_DIRECTORY = System.getProperty("user.dir") + "/product-images/";
 
     @Override
     public Response saveProduct(Product product, MultipartFile imageFile) {
@@ -163,28 +163,43 @@ public class ProductServiceImpl implements ProductService {
 
     // Save image to folder
     private String saveImage(MultipartFile imageFile) {
-
-        if (!imageFile.getContentType().startsWith("image/") ||
-                imageFile.getSize() > 1024 * 1024 * 1024) {
-            throw new IllegalArgumentException("Only image files under 1GB allowed");
+        // Validate image
+        if (!imageFile.getContentType().startsWith("image/") || imageFile.getSize() > 1024 * 1024 * 1024) {
+            throw new IllegalArgumentException("Only image files under 1GB are allowed");
         }
 
-        File directory = new File(IMAGE_DIRECTORY);
+        // 1. Get the current working directory (where the app is running)
+        Path currentPath = Paths.get(System.getProperty("user.dir"));
+
+        // 2. Check context: If we are running inside the 'backend' folder, go up one level.
+        //    If we are in the project root (IMS-react), stay there.
+        if (currentPath.endsWith("backend")) {
+            currentPath = currentPath.getParent();
+        }
+
+        // 3. Construct the full path to frontend/public/products
+        Path imageDir = currentPath.resolve("frontend").resolve("public").resolve("products");
+
+        // 4. Create the directory if it doesn't exist
+        File directory = imageDir.toFile();
         if (!directory.exists()) {
-            directory.mkdir();
-            log.info("Directory was created");
+            boolean created = directory.mkdirs(); // mkdirs() creates parent folders too if missing
+            if(created) log.info("Directory was created: " + directory.getAbsolutePath());
         }
 
+        // 5. Generate unique file name
         String uniqueFileName = UUID.randomUUID() + "_" + imageFile.getOriginalFilename();
-        String imagePath = IMAGE_DIRECTORY + uniqueFileName;
+
+        // 6. Combine directory path and filename
+        Path destinationPath = imageDir.resolve(uniqueFileName);
 
         try {
-            File destination = new File(imagePath);
-            imageFile.transferTo(destination);
+            // Transfer the file
+            imageFile.transferTo(destinationPath.toFile());
         } catch (Exception e) {
-            throw new IllegalArgumentException("Error saving image: " + e.getMessage());
+            throw new IllegalArgumentException("Error saving Image: " + e.getMessage());
         }
 
-        return imagePath;
+        return "products/" + uniqueFileName;
     }
 }
