@@ -18,8 +18,17 @@ public class SupplierServiceImpl implements SupplierService {
     private final SupplierRepository supplierRepository;
 
     @Override
-    public Response getAllSuppliers(){
-        List<Supplier> suppliers = supplierRepository.findAll();
+    public Response getAllSuppliers(String input){
+
+        List<Supplier> suppliers;
+        if (input == null || input.isBlank()) {
+            suppliers = supplierRepository.findAll();
+        }
+        else {
+            suppliers = supplierRepository.searchSupplierByAnything(input);
+        }
+
+
         return Response.builder()
                 .status(200) 
                 .message("Success")

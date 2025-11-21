@@ -241,9 +241,10 @@ public class TransactionRepositoryImpl implements TransactionRepository {
         if (noFilter) {
             sql = "SELECT * FROM transactions ORDER BY id DESC LIMIT ? OFFSET ?";
         } else {
-            sql = "SELECT * FROM transactions " +
-                    "WHERE description LIKE ? OR note LIKE ? OR transaction_type LIKE ? OR status LIKE ? " +
-                    "ORDER BY id DESC LIMIT ? OFFSET ?";
+            sql = "SELECT * FROM transactions t " +
+                    "JOIN products ON t.product_id = products.id " +
+                    "WHERE t.description LIKE ? OR t.note LIKE ? OR transaction_type LIKE ? OR t.status LIKE ? OR products.name LIKE ? " +
+                    "ORDER BY t.id DESC LIMIT ? OFFSET ? ";
         }
 
         try (Connection conn = DatabaseConfig.getConnection();
@@ -258,8 +259,9 @@ public class TransactionRepositoryImpl implements TransactionRepository {
                 ps.setString(2, pattern);
                 ps.setString(3, pattern);
                 ps.setString(4, pattern);
-                ps.setInt(5, size);
-                ps.setInt(6, page * size);
+                ps.setString(5, pattern);
+                ps.setInt(6, size);
+                ps.setInt(7, page * size);
             }
 
             ResultSet rs = ps.executeQuery();
@@ -289,8 +291,9 @@ public class TransactionRepositoryImpl implements TransactionRepository {
         if (noFilter) {
             sql = "SELECT COUNT(*) FROM transactions";
         } else {
-            sql = "SELECT COUNT(*) FROM transactions " +
-                    "WHERE description LIKE ? OR note LIKE ?";
+            sql = "SELECT COUNT(*) FROM transactions t " +
+                    "JOIN products ON t.product_id = products.id "+
+                    "WHERE t.description LIKE ? OR t.note LIKE ? OR products.name LIKE ? ";
         }
 
         try (Connection conn = DatabaseConfig.getConnection();
@@ -300,6 +303,7 @@ public class TransactionRepositoryImpl implements TransactionRepository {
                 String pattern = "%" + filter + "%";
                 ps.setString(1, pattern);
                 ps.setString(2, pattern);
+                ps.setString(3, pattern);
             }
 
             ResultSet rs = ps.executeQuery();

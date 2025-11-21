@@ -14,5 +14,6 @@ public interface SupplierRepository {
     Supplier save(Supplier supplierToSave);
     Supplier update(Supplier supplierToUpdate);
     Long deleteById(Long id);
+    List<Supplier> searchSupplierByAnything(String input);
 }
 

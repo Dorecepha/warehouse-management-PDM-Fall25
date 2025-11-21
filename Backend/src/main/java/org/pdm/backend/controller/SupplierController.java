@@ -5,8 +5,6 @@ import lombok.RequiredArgsConstructor;
 import org.pdm.backend.model.Supplier; 
 import org.pdm.backend.service.SupplierService; 
 import org.pdm.backend.wrappers.Response;
-import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -26,8 +24,8 @@ public class SupplierController {
 
 
     @GetMapping("/all")
-    public ResponseEntity<Response> getAllSuppliers() {
-        return ResponseEntity.ok(supplierService.getAllSuppliers());
+    public ResponseEntity<Response> getAllSuppliers(@RequestParam(required = false) String input) {
+        return ResponseEntity.ok(supplierService.getAllSuppliers(input));
     }
 
     @GetMapping("/{id}")

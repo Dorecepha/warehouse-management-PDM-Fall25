@@ -1,5 +1,6 @@
 package org.pdm.backend.repository.Impl;
 
+import org.pdm.backend.model.Product;
 import org.pdm.backend.model.Supplier;
 import org.pdm.backend.repository.SupplierRepository; 
 import org.pdm.backend.security.DatabaseConfig;
@@ -105,7 +106,28 @@ public class SupplierRepositoryImpl implements SupplierRepository {
             return 0L;
         }
 
-        private Supplier mapRowToSupplier(ResultSet rs) throws SQLException{
+    @Override
+    public List<Supplier> searchSupplierByAnything(String input) {
+        List<Supplier> list = new ArrayList<>();
+        String sql = "SELECT * FROM suppliers WHERE name LIKE ? OR contact_info LIKE ? OR address LIKE ?";
+        try(Connection conn= DatabaseConfig.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);){
+            String filter = "%" + input + "%";
+            ps.setString(1, filter);
+            ps.setString(2, filter );
+            ps.setString(3, filter);
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()){
+                Supplier supplier = mapRowToSupplier(rs);
+                list.add(supplier);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    private Supplier mapRowToSupplier(ResultSet rs) throws SQLException{
             return Supplier.builder()
                             .id(rs.getLong("id"))
                             .name(rs.getString("name"))
