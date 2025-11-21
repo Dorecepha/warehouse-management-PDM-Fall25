@@ -45,23 +45,23 @@ function ProductCreatePage() {
     });
   };
 
-return (
-  <div className="w-full min-h-full flex items-center justify-center">
-    <div className="w-full max-w-[1500px] px-10">
-      <ProductForm
-        defaultValues={productFormDefaultValues}
-        submitLabel="Create Product"
-        onSubmit={handleSubmit}
-        mode="create"
-        isSubmitting={isPending}
-        serverError={serverError}
-        categories={categories}
-        onImageChange={handleImageChange}
-        imageUrl={imageUrl}
-      />
+  return (
+    <div className="w-full min-h-full flex items-center justify-center">
+      <div className="w-full max-w-[1500px] px-10">
+        <ProductForm
+          defaultValues={productFormDefaultValues}
+          submitLabel="Create Product"
+          onSubmit={handleSubmit}
+          mode="create"
+          isSubmitting={isPending}
+          serverError={serverError}
+          categories={categories}
+          onImageChange={handleImageChange}
+          imageUrl={imageUrl}
+        />
+      </div>
     </div>
-  </div>
-);
+  );
 }
 
 export default ProductCreatePage;

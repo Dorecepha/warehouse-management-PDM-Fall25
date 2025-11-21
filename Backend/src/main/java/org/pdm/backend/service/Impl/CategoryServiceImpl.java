@@ -2,14 +2,11 @@ package org.pdm.backend.service.Impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.modelmapper.ModelMapper;
-import org.modelmapper.TypeToken;
 import org.pdm.backend.exception.NotFoundException;
 import org.pdm.backend.model.Category;
 import org.pdm.backend.repository.CategoryRepository;
 import org.pdm.backend.service.CategoryService;
 import org.pdm.backend.wrappers.Response;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -35,13 +32,20 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public Response getAllCategories() {
-        List<Category> categoryList = categoryRepository.findAll();
+    public Response getAllCategories(int page, int limit, String search) {
+        // Fetch paginated + filtered categories
+        List<Category> categoryList = categoryRepository.findAllFilteredPaged(search, page, limit);
+
+        // Get count for pagination metadata
+        long totalElements = categoryRepository.countFiltered(search);
+        int totalPages = (int) Math.ceil((double) totalElements / limit);
 
         return Response.builder()
                 .status(200)
                 .message("success")
                 .categories(categoryList)
+                .totalElements(totalElements)
+                .totalPages(totalPages)
                 .build();
     }
 

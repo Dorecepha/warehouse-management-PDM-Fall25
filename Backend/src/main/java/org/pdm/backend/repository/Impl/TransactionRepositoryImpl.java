@@ -174,7 +174,7 @@ public class TransactionRepositoryImpl implements TransactionRepository {
 
     @Override
     public List<Transaction> findAllByMonthAndYear(int month, int year) {
-        String sql = "SELECT * FROM transactions WHERE MONTH(create_at) = ? AND YEAR(create_at) = ?";
+        String sql = "SELECT * FROM transactions WHERE MONTH(created_at) = ? AND YEAR(created_at) = ?";
         List<Transaction> transactions = new java.util.ArrayList<>();
         try(Connection conn= DatabaseConfig.getConnection();
             PreparedStatement ps = conn.prepareStatement(sql)){
@@ -182,7 +182,12 @@ public class TransactionRepositoryImpl implements TransactionRepository {
             ps.setInt(2, year);
             ResultSet rs = ps.executeQuery();
             while (rs.next()){
-                transactions.add(mapToTransaction(rs));
+                Transaction transaction = mapToTransaction(rs);
+                // Populate product if productId exists
+                if (transaction.getProductId() != null) {
+                    transaction.setProduct(productRepository.findById(transaction.getProductId()).orElse(null));
+                }
+                transactions.add(transaction);
             }
         }catch (Exception e){
             e.printStackTrace();
@@ -225,6 +230,7 @@ public class TransactionRepositoryImpl implements TransactionRepository {
         return transaction;
     }
 
+    @Override
     public List<Transaction> findAllFilteredPaged(String filter, int page, int size) {
 
         boolean noFilter = (filter == null || filter.isBlank());
@@ -236,7 +242,7 @@ public class TransactionRepositoryImpl implements TransactionRepository {
             sql = "SELECT * FROM transactions ORDER BY id DESC LIMIT ? OFFSET ?";
         } else {
             sql = "SELECT * FROM transactions " +
-                    "WHERE description LIKE ? OR note LIKE ? " +
+                    "WHERE description LIKE ? OR note LIKE ? OR transaction_type LIKE ? OR status LIKE ? " +
                     "ORDER BY id DESC LIMIT ? OFFSET ?";
         }
 
@@ -250,13 +256,20 @@ public class TransactionRepositoryImpl implements TransactionRepository {
                 String pattern = "%" + filter + "%";
                 ps.setString(1, pattern);
                 ps.setString(2, pattern);
-                ps.setInt(3, size);
-                ps.setInt(4, page * size);
+                ps.setString(3, pattern);
+                ps.setString(4, pattern);
+                ps.setInt(5, size);
+                ps.setInt(6, page * size);
             }
 
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                list.add(mapToTransaction(rs));
+                Transaction transaction = mapToTransaction(rs);
+                // Populate product if productId exists
+                if (transaction.getProductId() != null) {
+                    transaction.setProduct(productRepository.findById(transaction.getProductId()).orElse(null));
+                }
+                list.add(transaction);
             }
 
         } catch (Exception e) {

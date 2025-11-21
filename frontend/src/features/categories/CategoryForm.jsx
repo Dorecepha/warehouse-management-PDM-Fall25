@@ -14,24 +14,34 @@ function CategoryForm({
     register,
     handleSubmit,
     reset,
-    formState: { errors, isSubmitting },
+    formState: { errors, isSubmitting, isSubmitSuccessful },
   } = useForm({
     resolver: zodResolver(categorySchema),
     defaultValues,
   });
 
   React.useEffect(() => {
-    reset(defaultValues);
-  }, [defaultValues, reset]);
+    if (isSubmitSuccessful) {
+      reset(defaultValues);
+    }
+  }, [isSubmitSuccessful, reset, defaultValues]);
 
   const submitting = isSubmitting || isSubmittingProp;
 
   return (
     <div className="bg-white rounded-xl shadow-md overflow-hidden border border-slate-100">
-      <form onSubmit={handleSubmit(onSubmit)} className="p-6 space-y-6" noValidate>
-        
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="p-6 space-y-6"
+        noValidate
+      >
         <div className="space-y-2">
-          <label htmlFor="name" className="block text-sm font-medium text-slate-700">Category Name</label>
+          <label
+            htmlFor="name"
+            className="block text-sm font-medium text-slate-700"
+          >
+            Category Name
+          </label>
           <input
             id="name"
             type="text"
@@ -40,7 +50,9 @@ function CategoryForm({
             {...register('name')}
             aria-invalid={errors.name ? 'true' : 'false'}
           />
-          {errors.name && <p className="text-sm text-red-600 mt-1">{errors.name.message}</p>}
+          {errors.name && (
+            <p className="text-sm text-red-600 mt-1">{errors.name.message}</p>
+          )}
         </div>
 
         {serverError && (

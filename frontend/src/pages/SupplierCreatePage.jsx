@@ -24,8 +24,12 @@ function SupplierCreatePage() {
   return (
     <div className="py-8 px-4 mx-auto max-w-5xl">
       <div className="text-center mb-10">
-        <h1 className="text-3xl font-bold text-slate-900">Create New Supplier</h1>
-        <p className="text-slate-500 mt-2">Fill in the information below to add a new supplier</p>
+        <h1 className="text-3xl font-bold text-slate-900">
+          Create New Supplier
+        </h1>
+        <p className="text-slate-500 mt-2">
+          Fill in the information below to add a new supplier
+        </p>
       </div>
 
       <SupplierForm

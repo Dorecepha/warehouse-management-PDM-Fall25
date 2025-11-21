@@ -40,8 +40,12 @@ function ProductPage() {
       <div className="rounded-3xl bg-white shadow p-10">
         <header className="flex items-center justify-between mb-10">
           <div>
-            <h1 className="text-3xl font-inter font-semibold text-slate-900">Product</h1>
-            <p className="text-sm text-slate-500">Manage your product inventory</p>
+            <h1 className="text-3xl font-inter font-semibold text-slate-900">
+              Product
+            </h1>
+            <p className="text-sm text-slate-500">
+              Manage your product inventory
+            </p>
           </div>
           <button
             onClick={() => navigate('/products/new')}
@@ -96,12 +100,18 @@ function ProductPage() {
                 />
 
                 <div className="p-4 space-y-1">
-                  <h3 className="text-lg font-semibold text-slate-900">{product.name}</h3>
+                  <h3 className="text-lg font-semibold text-slate-900">
+                    {product.name}
+                  </h3>
                   <p className="text-xs text-slate-500">SKU: {product.sku}</p>
 
                   <div className="mt-3 flex items-center justify-between">
-                    <span className="text-xl font-bold text-primary">${product.price}</span>
-                    <span className="text-xs text-slate-500">Qty: {product.stockQuantity}</span>
+                    <span className="text-xl font-bold text-primary">
+                      ${product.price}
+                    </span>
+                    <span className="text-xs text-slate-500">
+                      Qty: {product.stockQuantity}
+                    </span>
                   </div>
                 </div>
 
@@ -119,7 +129,6 @@ function ProductPage() {
                     Delete
                   </button>
                 </div>
-
               </div>
             ))}
           </div>
@@ -133,7 +142,6 @@ function ProductPage() {
             />
           )}
         </footer>
-
       </div>
     </div>
   );

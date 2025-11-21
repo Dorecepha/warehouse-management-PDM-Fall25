@@ -76,5 +76,37 @@ public class CategoryRepositoryImpl implements CategoryRepository {
         List<Category> results = jdbcTemplate.query(sql, mapRowToCategories, name);
         return results.isEmpty() ? null : results.get(0);
     }
+
+    @Override
+    public List<Category> findAllFilteredPaged(String filter, int page, int size) {
+        boolean noFilter = (filter == null || filter.isBlank());
+        String sql;
+
+        if (noFilter) {
+            sql = "SELECT id, name FROM categories ORDER BY id DESC LIMIT ? OFFSET ?";
+            return jdbcTemplate.query(sql, mapRowToCategories, size, (page - 1) * size);
+        } else {
+            sql = "SELECT id, name FROM categories WHERE name LIKE ? ORDER BY id DESC LIMIT ? OFFSET ?";
+            String pattern = "%" + filter + "%";
+            return jdbcTemplate.query(sql, mapRowToCategories, pattern, size, (page - 1) * size);
+        }
+    }
+
+    @Override
+    public long countFiltered(String filter) {
+        boolean noFilter = (filter == null || filter.isBlank());
+        String sql;
+
+        if (noFilter) {
+            sql = "SELECT COUNT(*) FROM categories";
+            Long count = jdbcTemplate.queryForObject(sql, Long.class);
+            return count != null ? count : 0;
+        } else {
+            sql = "SELECT COUNT(*) FROM categories WHERE name LIKE ?";
+            String pattern = "%" + filter + "%";
+            Long count = jdbcTemplate.queryForObject(sql, Long.class, pattern);
+            return count != null ? count : 0;
+        }
+    }
     
 }

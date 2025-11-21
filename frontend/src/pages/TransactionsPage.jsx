@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useTransactions } from '../features/transactions/api';
+import { useTransactions, usePurchaseTransaction, useSellTransaction } from '../features/transactions/api';
 import PaginationComponent from '../components/PaginationComponent';
 
 // --- Helper Components for Badges ---
@@ -79,13 +79,16 @@ function TransactionsPage() {
   };
 
   // Filter logic (Client-side filtering for now)
-  const allTransactions = data?.transactions ?? [];
+  // Filter out RETURN_TO_SUPPLIER transactions as they're not supported in UI
+  const allTransactions = (data?.transactions ?? []).filter(
+    (tx) => tx.transactionType !== 'RETURN_TO_SUPPLIER'
+  );
   const displayedTransactions = useMemo(() => {
     if (filterType === 'ALL') return allTransactions;
     return allTransactions.filter((tx) => tx.transactionType === filterType);
   }, [allTransactions, filterType]);
 
-  const totalPages = data?.meta?.totalPages ?? 1;
+  const totalPages = data?.totalPages ?? 1;
 
   return (
     <div className="min-h-[600px] rounded-[32px] border border-slate-200 bg-white p-8 shadow-sm">

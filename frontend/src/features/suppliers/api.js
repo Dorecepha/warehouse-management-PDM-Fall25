@@ -7,7 +7,7 @@ export function useSuppliers({ page = 1, limit = 10, search = '' } = {}) {
   return useQuery({
     queryKey: [...SUPPLIERS_QUERY_KEY, { page, limit, search }],
     queryFn: async () => {
-      const response = await api.get('/suppliers', {
+      const response = await api.get('/suppliers/all', {
         params: {
           page,
           limit,
@@ -36,7 +36,7 @@ export function useCreateSupplier() {
 
   return useMutation({
     mutationFn: async (payload) => {
-      const response = await api.post('/suppliers', payload);
+      const response = await api.post('/suppliers/add', payload);
       return response.data;
     },
     onSuccess: () => {
@@ -50,7 +50,7 @@ export function useUpdateSupplier() {
 
   return useMutation({
     mutationFn: async ({ id, data }) => {
-      const response = await api.put(`/suppliers/${id}`, data);
+      const response = await api.put(`/suppliers/update/${id}`, data);
       return response.data;
     },
     onSuccess: () => {
@@ -64,7 +64,7 @@ export function useDeleteSupplier() {
 
   return useMutation({
     mutationFn: async (id) => {
-      const response = await api.delete(`/suppliers/${id}`);
+      const response = await api.delete(`/suppliers/delete/${id}`);
       return response.data;
     },
     onSuccess: () => {

@@ -39,24 +39,38 @@ const METRIC_DETAILS = {
 const transformTransactionData = (transactions, month, year) => {
   const dailyData = {};
   const daysInMonth = new Date(year, month, 0).getDate();
-
   for (let day = 1; day <= daysInMonth; day++) {
     dailyData[day] = { day, count: 0, quantity: 0, amount: 0 };
   }
 
+  if (!transactions || !Array.isArray(transactions)) {
+    return Object.values(dailyData);
+  }
+
   transactions.forEach((transaction) => {
-    const date = new Date(transaction.createdAt);
+    const type = transaction.transactionType || transaction.type;
+    
+    // Skip 'RETURN_TO_SUPPLIER'
+    if (type === 'RETURN_TO_SUPPLIER') {
+      return;
+    }
+    const timestamp = transaction.createdAt || transaction.transactionDate;
+    if (!timestamp) return;
+
+    const date = new Date(timestamp);
     if (date.getMonth() + 1 === month && date.getFullYear() === year) {
       const day = date.getDate();
+      
       if (dailyData[day]) {
         const priceValue =
-          transaction.transactionType === 'SALE'
-            ? transaction.totalPrice 
-            : -transaction.totalPrice; 
+          type === 'SALE'
+            ? Number(transaction.totalPrice ?? 0)
+            : -Number(transaction.totalPrice ?? 0); 
 
         dailyData[day].count += 1;
-        dailyData[day].quantity += transaction.totalProducts;
-        dailyData[day].amount += priceValue; 
+        dailyData[day].quantity +=
+          transaction.totalProducts ?? transaction.quantity ?? 0;
+        dailyData[day].amount += priceValue || 0;
       }
     }
   });
@@ -90,10 +104,7 @@ function DashboardPage() {
     isLoading,
     isError,
     error,
-  } = useTransactionsByMonth({
-    month: selectedMonth,
-    year: selectedYear,
-  });
+  } = useTransactionsByMonth(selectedMonth, selectedYear);
 
   const chartData = useMemo(() => {
     const transactions = transactionResponse?.transactions ?? [];
@@ -170,7 +181,7 @@ function DashboardPage() {
           </div>
         ) : isError ? (
           <div className="flex h-full items-center justify-center text-red-500">
-            {error.message}
+            {error?.message || 'An error occurred fetching data'}
           </div>
         ) : (
           <ResponsiveContainer width="100%" height="100%">

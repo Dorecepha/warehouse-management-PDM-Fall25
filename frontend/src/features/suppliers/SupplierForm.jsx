@@ -29,11 +29,19 @@ function SupplierForm({
   return (
     <div className="max-w-2xl mx-auto bg-white rounded-xl shadow-lg overflow-hidden">
       <div className="bg-white p-8">
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6" noValidate>
-          
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className="space-y-6"
+          noValidate
+        >
           {/* Name Input */}
           <div className="space-y-1.5">
-            <label htmlFor="name" className="block text-sm font-medium text-slate-700">Supplier Name</label>
+            <label
+              htmlFor="name"
+              className="block text-sm font-medium text-slate-700"
+            >
+              Supplier Name
+            </label>
             <input
               id="name"
               type="text"
@@ -42,12 +50,19 @@ function SupplierForm({
               {...register('name')}
               aria-invalid={errors.name ? 'true' : 'false'}
             />
-            {errors.name && <p className="text-sm text-red-600">{errors.name.message}</p>}
+            {errors.name && (
+              <p className="text-sm text-red-600">{errors.name.message}</p>
+            )}
           </div>
 
           {/* Contact Info Input */}
           <div className="space-y-1.5">
-            <label htmlFor="contactInfo" className="block text-sm font-medium text-slate-700">Contact Info</label>
+            <label
+              htmlFor="contactInfo"
+              className="block text-sm font-medium text-slate-700"
+            >
+              Contact Info
+            </label>
             <input
               id="contactInfo"
               type="text"
@@ -56,12 +71,21 @@ function SupplierForm({
               {...register('contactInfo')}
               aria-invalid={errors.contactInfo ? 'true' : 'false'}
             />
-            {errors.contactInfo && <p className="text-sm text-red-600">{errors.contactInfo.message}</p>}
+            {errors.contactInfo && (
+              <p className="text-sm text-red-600">
+                {errors.contactInfo.message}
+              </p>
+            )}
           </div>
 
           {/* Address Input */}
           <div className="space-y-1.5">
-            <label htmlFor="address" className="block text-sm font-medium text-slate-700">Address</label>
+            <label
+              htmlFor="address"
+              className="block text-sm font-medium text-slate-700"
+            >
+              Address
+            </label>
             <textarea
               id="address"
               rows={3}
@@ -70,7 +94,9 @@ function SupplierForm({
               {...register('address')}
               aria-invalid={errors.address ? 'true' : 'false'}
             />
-            {errors.address && <p className="text-sm text-red-600">{errors.address.message}</p>}
+            {errors.address && (
+              <p className="text-sm text-red-600">{errors.address.message}</p>
+            )}
           </div>
 
           {/* Server Error Message */}

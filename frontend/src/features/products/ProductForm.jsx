@@ -6,8 +6,8 @@ import { productSchema, productFormDefaultValues } from './schema';
 function ProductForm({
   defaultValues = productFormDefaultValues,
   submitLabel = 'Save Product',
-  onSubmit = () => { },
-  mode = "create",
+  onSubmit = () => {},
+  mode = 'create',
   isSubmitting: isSubmittingProp = false,
   serverError,
   categories = [],
@@ -98,14 +98,17 @@ function ProductForm({
     >
       <div className="space-y-1 mb-6">
         <h2 className="text-[40px] font-inter font-bold text-slate-800">
-          {mode === "create" ? "New Product" : "Edit Product"}
+          {mode === 'create' ? 'New Product' : 'Edit Product'}
         </h2>
       </div>
 
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
         <div className="space-y-4 md:col-span-1">
           <div className="space-y-2">
-            <label htmlFor="name" className="block text-[19px] font-inter font-normal text-slate-700">
+            <label
+              htmlFor="name"
+              className="block text-[19px] font-inter font-normal text-slate-700"
+            >
               Product Name
             </label>
             <div
@@ -120,11 +123,16 @@ function ProductForm({
                 aria-invalid={errors.name ? 'true' : 'false'}
               />
             </div>
-            {errors.name && <p className="text-sm text-red-600">{errors.name.message}</p>}
+            {errors.name && (
+              <p className="text-sm text-red-600">{errors.name.message}</p>
+            )}
           </div>
 
           <div className="space-y-2">
-            <label htmlFor="sku" className="block text-[19px] font-inter font-normal text-slate-700">
+            <label
+              htmlFor="sku"
+              className="block text-[19px] font-inter font-normal text-slate-700"
+            >
               SKU
             </label>
             <div className="bg-gray-100 rounded-md px-3 py-2 hover:bg-gray-200 transition duration-300">
@@ -136,11 +144,16 @@ function ProductForm({
                 aria-invalid={errors.sku ? 'true' : 'false'}
               />
             </div>
-            {errors.sku && <p className="text-sm text-red-600">{errors.sku.message}</p>}
+            {errors.sku && (
+              <p className="text-sm text-red-600">{errors.sku.message}</p>
+            )}
           </div>
 
           <div className="space-y-2">
-            <label htmlFor="description" className="block text-[19px] font-normal font-inter text-slate-700">
+            <label
+              htmlFor="description"
+              className="block text-[19px] font-normal font-inter text-slate-700"
+            >
               Description
             </label>
             <div
@@ -155,11 +168,18 @@ function ProductForm({
                 aria-invalid={errors.description ? 'true' : 'false'}
               />
             </div>
-            {errors.description && <p className="text-sm text-red-600">{errors.description.message}</p>}
+            {errors.description && (
+              <p className="text-sm text-red-600">
+                {errors.description.message}
+              </p>
+            )}
           </div>
 
           <div className="space-y-2">
-            <label htmlFor="price" className="block text-[19px] font-normal font-inter text-slate-700">
+            <label
+              htmlFor="price"
+              className="block text-[19px] font-normal font-inter text-slate-700"
+            >
               Price
             </label>
             <div className="bg-gray-100 rounded-md px-3 py-2 hover:bg-gray-200 transition duration-300">
@@ -169,12 +189,17 @@ function ProductForm({
                 className="w-full bg-transparent outline-none"
                 {...register('price', { valueAsNumber: true })}
               />
-              {errors.price && <p className="text-sm text-red-600">{errors.price.message}</p>}
+              {errors.price && (
+                <p className="text-sm text-red-600">{errors.price.message}</p>
+              )}
             </div>
           </div>
 
           <div className="space-y-2">
-            <label htmlFor="stockQuantity" className="block text-[19px] font-inter font-normal text-slate-700">
+            <label
+              htmlFor="stockQuantity"
+              className="block text-[19px] font-inter font-normal text-slate-700"
+            >
               Stock Quantity
             </label>
             <div className="bg-gray-100 rounded-md px-3 py-2 hover:bg-gray-200 transition duration-300">
@@ -184,12 +209,19 @@ function ProductForm({
                 className="w-full bg-transparent outline-none"
                 {...register('stockQuantity', { valueAsNumber: true })}
               />
-              {errors.stockQuantity && <p className="text-sm text-red-600">{errors.stockQuantity.message}</p>}
+              {errors.stockQuantity && (
+                <p className="text-sm text-red-600">
+                  {errors.stockQuantity.message}
+                </p>
+              )}
             </div>
           </div>
         </div>
 
-        <div ref={rightColRef} className="space-y-4 md:col-span-1 md:flex md:flex-col md:items-center">
+        <div
+          ref={rightColRef}
+          className="space-y-4 md:col-span-1 md:flex md:flex-col md:items-center"
+        >
           <div
             ref={previewRef}
             className="
@@ -200,9 +232,15 @@ function ProductForm({
             "
           >
             {imageUrl ? (
-              <img src={imageUrl} alt="Preview" className="w-full h-full object-cover object-center" />
+              <img
+                src={imageUrl}
+                alt="Preview"
+                className="w-full h-full object-cover object-center"
+              />
             ) : (
-              <span className="text-sm text-slate-500 text-center">Image preview</span>
+              <span className="text-sm text-slate-500 text-center">
+                Image preview
+              </span>
             )}
           </div>
           <div className="md:self-start w-full mt-10">
@@ -213,7 +251,7 @@ function ProductForm({
 
               <div className="flex-1">
                 <div className="px-3 py-2 bg-gray-100 rounded-full border border-black text-sm text-slate-700 truncate">
-                  {imageUrl ? imageUrl.split('/').pop() : "No file selected"}
+                  {imageUrl ? imageUrl.split('/').pop() : 'No file selected'}
                 </div>
               </div>
 
@@ -241,7 +279,10 @@ function ProductForm({
               className="hidden"
             />
             <div className="space-y-2 mt-5">
-              <label htmlFor="categoryId" className="block text-[19px] font-inter font-normal text-slate-700">
+              <label
+                htmlFor="categoryId"
+                className="block text-[19px] font-inter font-normal text-slate-700"
+              >
                 Category
               </label>
               <div className="bg-gray-100 rounded-md px-3 py-2 hover:bg-gray-200 transition duration-300">
@@ -252,10 +293,16 @@ function ProductForm({
                 >
                   <option value={0}>Select a category</option>
                   {categories.map((c) => (
-                    <option key={c.id} value={c.id}>{c.name}</option>
+                    <option key={c.id} value={c.id}>
+                      {c.name}
+                    </option>
                   ))}
                 </select>
-                {errors.categoryId && <p className="text-sm text-red-600">{errors.categoryId.message}</p>}
+                {errors.categoryId && (
+                  <p className="text-sm text-red-600">
+                    {errors.categoryId.message}
+                  </p>
+                )}
               </div>
             </div>
             <input

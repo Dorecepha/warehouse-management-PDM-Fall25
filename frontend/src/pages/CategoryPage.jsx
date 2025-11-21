@@ -24,12 +24,10 @@ function CategoryPage() {
   const updateMutation = useUpdateCategory();
   const deleteMutation = useDeleteCategory();
 
-  const handleCreate = (formData, { reset }) => {
+  const handleCreate = (formData) => {
     setServerError('');
     createMutation.mutate(formData, {
-      onSuccess: () => {
-        reset(categoryFormDefaultValues);
-      },
+      onSuccess: () => {},
       onError: (err) => {
         setServerError(err.message || 'Failed to create category.');
       },
@@ -63,22 +61,22 @@ function CategoryPage() {
     }
   };
 
-  const categories = data?.categories ?? [];
-  const totalPages = data?.meta?.totalPages ?? 1;
+  const categories = data?.content || data?.categories || [];
+  const totalPages = data?.totalPages || data?.meta?.totalPages || 1;
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 py-6">
-      
-      {/* Left Column: Form (Chiếm 4/12 phần trên desktop) */}
       <div className="lg:col-span-4 space-y-6 order-2 lg:order-1">
         <div>
           <h2 className="text-xl font-bold text-slate-900 mb-1">
             {editingCategory ? 'Edit Category' : 'Add Category'}
           </h2>
           <p className="text-sm text-slate-500 mb-4">
-            {editingCategory ? 'Update category details' : 'Create a new product category'}
+            {editingCategory
+              ? 'Update category details'
+              : 'Create a new product category'}
           </p>
-          
+
           <CategoryForm
             key={editingCategory?.id ?? 'create'}
             defaultValues={editingCategory ?? categoryFormDefaultValues}
@@ -91,7 +89,10 @@ function CategoryPage() {
           {editingCategory && (
             <button
               type="button"
-              onClick={() => { setEditingCategory(null); setServerError(''); }}
+              onClick={() => {
+                setEditingCategory(null);
+                setServerError('');
+              }}
               className="w-full mt-3 px-4 py-2.5 rounded-lg bg-white border border-slate-300 text-slate-700 font-medium hover:bg-slate-50 transition-all"
             >
               Cancel Edit
@@ -105,28 +106,37 @@ function CategoryPage() {
         <div className="bg-white rounded-xl shadow-lg border border-slate-100 overflow-hidden">
           <div className="p-6 border-b border-slate-100 bg-white">
             <h2 className="text-xl font-bold text-slate-900">Categories</h2>
-            <p className="text-sm text-slate-500 mt-1">Organize your categories</p>
+            <p className="text-sm text-slate-500 mt-1">
+              Organize your categories
+            </p>
           </div>
 
           {isLoading ? (
-             <div className="p-8 text-center text-slate-500">Loading...</div>
+            <div className="p-8 text-center text-slate-500">Loading...</div>
           ) : isError ? (
-             <div className="p-6 text-red-600">{error.message}</div>
+            <div className="p-6 text-red-600">{error.message}</div>
           ) : categories.length === 0 ? (
-             <div className="p-8 text-center text-slate-500">No categories found.</div>
+            <div className="p-8 text-center text-slate-500">
+              No categories found.
+            </div>
           ) : (
             <ul className="divide-y divide-slate-100">
               {categories.map((category) => (
-                <li key={category.id} className="p-4 flex items-center justify-between hover:bg-slate-50 transition-colors">
-                  <span className="font-medium text-slate-800 pl-2">{category.name}</span>
+                <li
+                  key={category.id}
+                  className="p-4 flex items-center justify-between hover:bg-slate-50 transition-colors"
+                >
+                  <span className="font-medium text-slate-800 pl-2">
+                    {category.name}
+                  </span>
                   <div className="flex items-center gap-3">
-                    <button 
+                    <button
                       onClick={() => setEditingCategory(category)}
                       className="px-3 py-1.5 text-sm font-medium text-indigo-600 hover:text-indigo-800 bg-indigo-50 hover:bg-indigo-100 rounded-md transition-colors"
                     >
                       Edit
                     </button>
-                    <button 
+                    <button
                       onClick={() => handleDelete(category.id)}
                       disabled={deleteMutation.isPending}
                       className="px-3 py-1.5 text-sm font-medium text-red-600 hover:text-red-800 bg-red-50 hover:bg-red-100 rounded-md transition-colors disabled:opacity-50"
@@ -138,10 +148,14 @@ function CategoryPage() {
               ))}
             </ul>
           )}
-          
+
           {totalPages > 1 && (
             <div className="p-4 border-t border-slate-100 flex justify-center">
-              <PaginationComponent currentPage={page} totalPages={totalPages} onPageChange={setPage} />
+              <PaginationComponent
+                currentPage={page}
+                totalPages={totalPages}
+                onPageChange={setPage}
+              />
             </div>
           )}
         </div>

@@ -90,7 +90,7 @@ function AppLayout() {
         </nav>
       </aside>
 
-<main className="flex flex-1 overflow-auto rounded-l-[32px] bg-white p-4 sm:p-10">
+      <main className="flex flex-1 overflow-auto rounded-l-[32px] bg-white p-4 sm:p-10">
         <div className="min-h-full w-full">
           <Outlet />
         </div>

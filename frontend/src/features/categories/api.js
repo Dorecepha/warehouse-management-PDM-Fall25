@@ -7,7 +7,7 @@ export function useCategories({ page = 1, limit = 10, search = '' } = {}) {
   return useQuery({
     queryKey: [...CATEGORIES_QUERY_KEY, { page, limit, search }],
     queryFn: async () => {
-      const response = await api.get('/categories', {
+      const response = await api.get('/categories/all', {
         params: {
           page,
           limit,
@@ -36,7 +36,7 @@ export function useCreateCategory() {
 
   return useMutation({
     mutationFn: async (payload) => {
-      const response = await api.post('/categories', payload);
+      const response = await api.post('/categories/add', payload);
       return response.data;
     },
     onSuccess: () => {
@@ -50,7 +50,7 @@ export function useUpdateCategory() {
 
   return useMutation({
     mutationFn: async ({ id, data }) => {
-      const response = await api.put(`/categories/${id}`, data);
+      const response = await api.put(`/categories/update/${id}`, data);
       return response.data;
     },
     onSuccess: () => {
@@ -64,7 +64,7 @@ export function useDeleteCategory() {
 
   return useMutation({
     mutationFn: async (id) => {
-      const response = await api.delete(`/categories/${id}`);
+      const response = await api.delete(`/categories/delete/${id}`);
       return response.data;
     },
     onSuccess: () => {

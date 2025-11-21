@@ -166,10 +166,9 @@ public class TransactionServiceImpl implements TransactionService {
 
         int totalPages = (int) Math.ceil((double) totalElements / size);
 
-        // 3. Optional: Remove nested objects if needed
+        // 3. Optional: Remove nested objects if needed (but keep product for display)
         transactions.forEach(t -> {
             t.setUserId(null);
-            t.setProductId(null);
             t.setSupplierId(null);
         });
 

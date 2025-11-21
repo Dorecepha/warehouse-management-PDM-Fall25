@@ -2,14 +2,14 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import SellForm from '../features/transactions/SellForm';
 import { sellFormDefaultValues } from '../features/transactions/sellSchema';
-import { useCreateTransaction } from '../features/transactions/api';
+import { useSellTransaction } from '../features/transactions/api';
 import { useProducts } from '../features/products/api';
 
 function SellPage() {
   const navigate = useNavigate();
   const [serverError, setServerError] = useState('');
 
-  const { mutate, isPending, error } = useCreateTransaction();
+  const { mutate, isPending, error } = useSellTransaction();
 
   const { data: productsData, isLoading: isLoadingProducts } = useProducts({
     limit: 1000,

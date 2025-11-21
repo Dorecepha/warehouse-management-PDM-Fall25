@@ -37,7 +37,7 @@ function TransactionDetailsPage() {
   const handleUpdateStatus = () => {
     setServerError('');
     updateMutation.mutate(
-      { id, status: { status } },
+      { id, status },
       {
         onSuccess: () => {
           navigate('/transactions');
@@ -151,7 +151,7 @@ function TransactionDetailsPage() {
 
         <div className="flex items-end justify-end">
           <button
-            onClick={() => navigate(-1)} 
+            onClick={() => navigate(-1)}
             className="flex items-center gap-2 rounded-lg bg-[#3E3998] px-6 py-3 text-sm font-bold text-white hover:opacity-90"
           >
             <svg

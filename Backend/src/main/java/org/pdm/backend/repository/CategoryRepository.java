@@ -10,4 +10,6 @@ public interface CategoryRepository {
     List<Category> findAll();
     void deleteById(Long id);
     Category findByName(String name);
+    List<Category> findAllFilteredPaged(String filter, int page, int size);
+    long countFiltered(String filter);
 }

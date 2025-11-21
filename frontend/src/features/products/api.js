@@ -7,13 +7,10 @@ export function useProducts({ page = 1, limit = 10, search = '' } = {}) {
   return useQuery({
     queryKey: [...PRODUCTS_QUERY_KEY, { page, limit, search }],
     queryFn: async () => {
-      const response = await api.get('/products', {
-        params: {
-          page,
-          limit,
-          search: search || undefined,
-        },
-      });
+      const endpoint = search ? '/products/search' : '/products/all';
+      const params = search ? { input: search } : { page, limit };
+
+      const response = await api.get(endpoint, { params });
       return response.data;
     },
     keepPreviousData: true,
@@ -36,7 +33,9 @@ export function useCreateProduct() {
 
   return useMutation({
     mutationFn: async (payload) => {
-      const response = await api.post('/products', payload);
+      const response = await api.post('/products/add', payload, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
       return response.data;
     },
     onSuccess: () => {
@@ -50,7 +49,19 @@ export function useUpdateProduct() {
 
   return useMutation({
     mutationFn: async ({ id, data }) => {
-      const response = await api.put(`/products/${id}`, data);
+      // CHANGE: Path updated to '/products/update' (No ID in URL)
+
+      // SAFETY CHECK: Since the backend expects 'productId' in the body,
+      // we ensure it's appended if the incoming data is FormData.
+      if (data instanceof FormData) {
+        data.append('productId', id);
+      } else {
+        console.error('Backend expects FormData for product updates!');
+      }
+
+      const response = await api.put('/products/update', data, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
       return response.data;
     },
     onSuccess: () => {
@@ -64,7 +75,8 @@ export function useDeleteProduct() {
 
   return useMutation({
     mutationFn: async (id) => {
-      const response = await api.delete(`/products/${id}`);
+      // CHANGE: Path updated to '/products/delete/${id}'
+      const response = await api.delete(`/products/delete/${id}`);
       return response.data;
     },
     onSuccess: () => {

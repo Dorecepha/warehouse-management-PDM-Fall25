@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import PurchaseForm from '../features/transactions/PurchaseForm';
 import { purchaseFormDefaultValues } from '../features/transactions/purchaseSchema';
-import { useCreateTransaction } from '../features/transactions/api';
+import { usePurchaseTransaction } from '../features/transactions/api';
 import { useProducts } from '../features/products/api';
 import { useSuppliers } from '../features/suppliers/api';
 
@@ -10,7 +10,7 @@ function PurchasePage() {
   const navigate = useNavigate();
   const [serverError, setServerError] = useState('');
 
-  const { mutate, isPending, error } = useCreateTransaction();
+  const { mutate, isPending, error } = usePurchaseTransaction();
 
   const { data: productsData, isLoading: isLoadingProducts } = useProducts({
     limit: 1000,

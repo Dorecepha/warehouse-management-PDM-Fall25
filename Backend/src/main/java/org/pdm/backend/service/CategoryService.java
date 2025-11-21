@@ -7,7 +7,7 @@ public interface CategoryService {
 
     Response createCategory(Category category);
 
-    Response getAllCategories();
+    Response getAllCategories(int page, int limit, String search);
 
     Response getCategoryById(Long id);
 
