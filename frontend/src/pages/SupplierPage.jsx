@@ -134,7 +134,7 @@ function SupplierPage() {
                   </td>
                   <td className="px-6 py-4 text-sm font-medium flex gap-3">
                     <button
-                      onClick={() => navigate('/suppliers/${supplier.id}/edit')}
+                      onClick={() => navigate(`/suppliers/${supplier.id}/edit`)}
                       className="text-indigo-600 hover:text-indigo-900"
                     >
                       Edit
