@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import ProductForm from '../features/products/ProductForm';
 import { productFormDefaultValues } from '../features/products/schema';
@@ -29,8 +29,7 @@ function ProductEditPage() {
       return productFormDefaultValues;
     }
 
-    setImageUrl(productData.product.imageUrl || '');
-
+    // no side-effects here
     return {
       name: productData.product.name ?? '',
       sku: productData.product.sku ?? '',
@@ -39,6 +38,13 @@ function ProductEditPage() {
       description: productData.product.description ?? '',
       categoryId: productData.product.categoryId ?? 0,
     };
+  }, [productData]);
+
+  // move side-effect of setting imageUrl into useEffect
+  useEffect(() => {
+    if (productData?.product?.imageUrl) {
+      setImageUrl(productData.product.imageUrl);
+    }
   }, [productData]);
 
   const handleImageChange = (e) => {
@@ -102,7 +108,7 @@ function ProductEditPage() {
     <div className="w-full min-h-full flex items-center justify-center">
       <div className="w-full max-w-[1500px] px-10">
         <ProductForm
-          defaultValues={productFormDefaultValues}
+          defaultValues={defaultValues}
           submitLabel="Update Product"
           onSubmit={handleSubmit}
           mode="edit"
