@@ -34,7 +34,6 @@ This project is developed by Group 02, consisted of the following awesome member
 - **JWT (JSON Web Tokens)** - Secure authentication using `jjwt` library (v0.12.6)
 - **MySQL** - Relational database management system
 - **AWS SDK S3** - Image file storage (v2.29.6)
-- **ModelMapper** - Object mapping utility (v3.2.1)
 - **Maven** - Dependency management and build tool
 
 ### Frontend
@@ -126,7 +125,7 @@ Ensure you have the following installed on your system:
 CREATE DATABASE inventory_db;
 ```
 
-3. The application will automatically create tables using Hibernate's `ddl-auto=update` mode on first run. No manual SQL scripts are required.
+3. Run the attached ![database file](inventory_db.sql) in MySQL Workplace or MySQL CLI to populate the database.
 
 ### Backend Setup
 
