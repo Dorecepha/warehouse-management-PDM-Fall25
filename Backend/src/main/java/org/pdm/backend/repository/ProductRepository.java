@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 public interface ProductRepository {
     Product save(Product productToSave); 
     Product update(Product productToUpdate);
-    List<Product> findAll();
+    List<Product> findAll(Long categoryId);
     Optional<Product> findById(Long id);
     List<Product> findByNameContainingOrDescriptionContaining(String name, String description);
     Long deleteById(Long id);

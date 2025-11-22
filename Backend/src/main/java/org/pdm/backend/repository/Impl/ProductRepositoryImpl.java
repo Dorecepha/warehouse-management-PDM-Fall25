@@ -64,18 +64,29 @@ public class ProductRepositoryImpl implements ProductRepository {
     }
 
     @Override
-    public List<Product> findAll() {
+    public List<Product> findAll(Long categoryId) {
         List<Product> list = new ArrayList<>();
-        String sql = "SELECT * FROM products";
-        try(Connection conn= DatabaseConfig.getConnection();
-            PreparedStatement ps = conn.prepareStatement(sql);){
-            ResultSet rs = ps.executeQuery();
-            while(rs.next()){
-                Product product = mapRowToProduct(rs);
-                list.add(product);
-            }
-        }catch (Exception e){
-            e.printStackTrace();
+        String sql;
+
+        if (categoryId == null){
+            sql = "SELECT * FROM products";
+        } else {
+            sql = "SELECT * FROM products WHERE category_id = ?";
+        }
+
+        try (Connection conn = DatabaseConfig.getConnection();
+         PreparedStatement ps = conn.prepareStatement(sql)) {
+        if (categoryId != null) {
+            ps.setLong(1, categoryId);
+        }
+
+        ResultSet rs = ps.executeQuery();
+        while (rs.next()) {
+            Product product = mapRowToProduct(rs);
+            list.add(product);
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
         }
         return list;
     }

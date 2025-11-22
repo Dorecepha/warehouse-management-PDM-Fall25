@@ -107,9 +107,9 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Response getAllProducts() {
+    public Response getAllProducts(Long categoryId) {
 
-        List<Product> products = productRepository.findAll();
+        List<Product> products = productRepository.findAll(categoryId);
 
         return Response.builder()
                 .status(200)
@@ -168,11 +168,7 @@ public class ProductServiceImpl implements ProductService {
             throw new IllegalArgumentException("Only image files under 1GB are allowed");
         }
 
-        // 1. Get the current working directory (where the app is running)
         Path currentPath = Paths.get(System.getProperty("user.dir"));
-
-        // 2. Check context: If we are running inside the 'backend' folder, go up one level.
-        //    If we are in the project root (IMS-react), stay there.
         if (currentPath.endsWith("backend")) {
             currentPath = currentPath.getParent();
         }
@@ -200,6 +196,6 @@ public class ProductServiceImpl implements ProductService {
             throw new IllegalArgumentException("Error saving Image: " + e.getMessage());
         }
 
-        return "products/" + uniqueFileName;
+        return "/products/" + uniqueFileName;
     }
 }

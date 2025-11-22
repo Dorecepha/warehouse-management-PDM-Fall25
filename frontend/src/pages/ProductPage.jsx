@@ -1,18 +1,24 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useProducts, useDeleteProduct } from '../features/products/api';
+import { useCategories } from '../features/categories/api';
 import PaginationComponent from '../components/PaginationComponent';
 
 function ProductPage() {
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState('');
   const [searchInput, setSearchInput] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('');
   const navigate = useNavigate();
+  const { data: categoriesData } = useCategories({ limit: 10 });
+  console.log('DEBUG CATEGORIES:', categoriesData);
+  const categories = categoriesData?.categories || [];
 
   const { data, isLoading, isError, error, isFetching } = useProducts({
     page,
     search,
     limit: 9,
+    categoryId: selectedCategory || null,
   });
 
   const deleteMutation = useDeleteProduct();
@@ -68,10 +74,19 @@ function ProductPage() {
             </div>
           </form>
           <select
-            className="rounded-full border border-slate-300 bg-white px-4 py-3 text-sm shadow-sm focus:ring-2 focus:ring-primary/20"
-            onChange={() => {}}
+            value={selectedCategory}
+            onChange={(e) => {
+              setSelectedCategory(e.target.value);
+              setPage(1);
+            }}
+            className="rounded-lg border border-slate-300 px-4 py-2 text-sm focus:border-primary focus:ring-1 focus:ring-primary"
           >
-            <option>All Categories</option>
+            <option value="">All Categories</option>
+            {categories.map((cat) => (
+              <option key={cat.id} value={cat.id}>
+                {cat.name}
+              </option>
+            ))}
           </select>
         </div>
         {isLoading ? (

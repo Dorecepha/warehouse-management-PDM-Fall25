@@ -3,12 +3,19 @@ import api from '../../lib/axios';
 
 const PRODUCTS_QUERY_KEY = ['products'];
 
-export function useProducts({ page = 1, limit = 10, search = '' } = {}) {
+export function useProducts({
+  page = 1,
+  limit = 10,
+  search = '',
+  categoryId = null,
+} = {}) {
   return useQuery({
-    queryKey: [...PRODUCTS_QUERY_KEY, { page, limit, search }],
+    queryKey: [...PRODUCTS_QUERY_KEY, { page, limit, search, categoryId }],
     queryFn: async () => {
       const endpoint = search ? '/products/search' : '/products/all';
-      const params = search ? { input: search } : { page, limit };
+      const params = search
+        ? { input: search }
+        : { page, limit, categoryId: categoryId || undefined };
 
       const response = await api.get(endpoint, { params });
       return response.data;
@@ -49,10 +56,6 @@ export function useUpdateProduct() {
 
   return useMutation({
     mutationFn: async ({ id, data }) => {
-      // CHANGE: Path updated to '/products/update' (No ID in URL)
-
-      // SAFETY CHECK: Since the backend expects 'productId' in the body,
-      // we ensure it's appended if the incoming data is FormData.
       if (data instanceof FormData) {
         data.append('productId', id);
       } else {
@@ -75,7 +78,6 @@ export function useDeleteProduct() {
 
   return useMutation({
     mutationFn: async (id) => {
-      // CHANGE: Path updated to '/products/delete/${id}'
       const response = await api.delete(`/products/delete/${id}`);
       return response.data;
     },

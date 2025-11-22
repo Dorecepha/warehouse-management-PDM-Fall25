@@ -58,7 +58,7 @@ public class ProductController {
         product.setName(name);
         product.setSku(sku);
         product.setPrice(price);
-        product.setId(productId); // Changed from setProductId to setId
+        product.setId(productId); 
         product.setStockQuantity(stockQuantity);
         product.setCategoryId(categoryId);
         product.setDescription(description);
@@ -69,8 +69,8 @@ public class ProductController {
 
 
     @GetMapping("/all")
-    public ResponseEntity<Response> getAllProducts() {
-        return ResponseEntity.ok(productService.getAllProducts());
+    public ResponseEntity<Response> getAllProducts(@RequestParam(value = "categoryId", required = false) Long categoryId) {
+        return ResponseEntity.ok(productService.getAllProducts(categoryId));
     }
 
     @GetMapping("/{id}")

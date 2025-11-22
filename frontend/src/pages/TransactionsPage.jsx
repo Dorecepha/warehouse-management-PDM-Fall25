@@ -1,6 +1,10 @@
 import React, { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useTransactions, usePurchaseTransaction, useSellTransaction } from '../features/transactions/api';
+import {
+  useTransactions,
+  usePurchaseTransaction,
+  useSellTransaction,
+} from '../features/transactions/api';
 import PaginationComponent from '../components/PaginationComponent';
 
 // --- Helper Components for Badges ---

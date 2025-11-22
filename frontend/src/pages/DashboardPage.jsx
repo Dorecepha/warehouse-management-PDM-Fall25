@@ -49,7 +49,7 @@ const transformTransactionData = (transactions, month, year) => {
 
   transactions.forEach((transaction) => {
     const type = transaction.transactionType || transaction.type;
-    
+
     // Skip 'RETURN_TO_SUPPLIER'
     if (type === 'RETURN_TO_SUPPLIER') {
       return;
@@ -60,12 +60,12 @@ const transformTransactionData = (transactions, month, year) => {
     const date = new Date(timestamp);
     if (date.getMonth() + 1 === month && date.getFullYear() === year) {
       const day = date.getDate();
-      
+
       if (dailyData[day]) {
         const priceValue =
           type === 'SALE'
             ? Number(transaction.totalPrice ?? 0)
-            : -Number(transaction.totalPrice ?? 0); 
+            : -Number(transaction.totalPrice ?? 0);
 
         dailyData[day].count += 1;
         dailyData[day].quantity +=
