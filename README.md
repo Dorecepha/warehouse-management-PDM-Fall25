@@ -125,7 +125,7 @@ Ensure you have the following installed on your system:
 CREATE DATABASE inventory_db;
 ```
 
-3. Run the attached ![database file](inventory_db.sql) in MySQL Workplace or MySQL CLI to populate the database.
+3. Run the attached [database file](inventory_db.sql) in MySQL Workplace or MySQL CLI to populate the database.
 
 ### Backend Setup
 
