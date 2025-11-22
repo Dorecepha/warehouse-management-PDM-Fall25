@@ -104,7 +104,7 @@ Secure user authentication system:
 - Password encryption
 ![Login](screenshots/Login.png)
 ![Sign-up](screenshots/Signup.png)
-![Role-based Control in action](screenshots/Role)
+![Role-based Control in action](screenshots/Role.png)
 
 ## Getting Started
 
