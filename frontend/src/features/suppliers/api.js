@@ -5,13 +5,13 @@ const SUPPLIERS_QUERY_KEY = ['suppliers'];
 
 export function useSuppliers({ page = 1, limit = 10, search = '' } = {}) {
   return useQuery({
-    queryKey: [...SUPPLIERS_QUERY_KEY, { page, limit, search }],
+    queryKey: [...SUPPLIERS_QUERY_KEY, { page, limit, input: search }],
     queryFn: async () => {
       const response = await api.get('/suppliers/all', {
         params: {
           page,
           limit,
-          search: search || undefined,
+          input: search || undefined,
         },
       });
       return response.data;
